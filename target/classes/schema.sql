@@ -1,5 +1,6 @@
 -- Suppression des tables si elles existent (dans l'ordre inverse des dépendances)
 DROP TABLE IF EXISTS utilisateur_interets;
+DROP TABLE IF EXISTS utilisateur_roles;
 DROP TABLE IF EXISTS media;
 DROP TABLE IF EXISTS don;
 DROP TABLE IF EXISTS action_de_charite;
@@ -101,4 +102,12 @@ CREATE TABLE IF NOT EXISTS utilisateur_interets (
     PRIMARY KEY (utilisateur_id, categorie_id),
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id),
     FOREIGN KEY (categorie_id) REFERENCES categorie(id)
+);
+
+-- Création de la table utilisateur_roles
+CREATE TABLE IF NOT EXISTS utilisateur_roles (
+    utilisateur_id BIGINT NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    PRIMARY KEY (utilisateur_id, role),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id)
 ); 

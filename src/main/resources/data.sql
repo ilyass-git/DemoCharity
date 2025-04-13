@@ -1,16 +1,22 @@
 -- Insertion des catégories
 INSERT INTO categorie (nom, description) VALUES 
-('Éducation', 'Actions liées à l''éducation et à la formation'),
-('Santé', 'Actions liées à la santé et aux soins médicaux'),
-('Environnement', 'Actions liées à la protection de l''environnement'),
-('Pauvreté', 'Actions liées à la lutte contre la pauvreté'),
-('Culture', 'Actions liées à la promotion de la culture');
+('Éducation', 'Actions caritatives liées à l''éducation et à la formation'),
+('Santé', 'Actions caritatives liées à la santé et aux soins médicaux'),
+('Environnement', 'Actions caritatives liées à la protection de l''environnement'),
+('Pauvreté', 'Actions caritatives liées à la lutte contre la pauvreté'),
+('Culture', 'Actions caritatives liées à la promotion de la culture');
 
--- Insertion des utilisateurs
+-- Insertion des utilisateurs (mot de passe: password123)
 INSERT INTO utilisateur (prenom, nom, email, mot_de_passe, numero_telephone, adresse, ville, pays, code_postal, langue, notifications_email_activees, date_creation, date_modification) VALUES 
-('Jean', 'Dupont', 'jean.dupont@example.com', '$2a$10$rDmFN6ZJvwFqMz1qZqZqZ.qZqZqZqZqZqZqZqZqZqZqZqZqZqZqZ', '0123456789', '123 Rue de Paris', 'Paris', 'France', '75001', 'FR', true, NOW(), NOW()),
-('Marie', 'Martin', 'marie.martin@example.com', '$2a$10$rDmFN6ZJvwFqMz1qZqZqZ.qZqZqZqZqZqZqZqZqZqZqZqZqZqZqZ', '0987654321', '456 Avenue des Champs-Élysées', 'Paris', 'France', '75008', 'FR', true, NOW(), NOW()),
-('Ahmed', 'Benali', 'ahmed.benali@example.com', '$2a$10$rDmFN6ZJvwFqMz1qZqZqZ.qZqZqZqZqZqZqZqZqZqZqZqZqZqZqZ', '0555555555', '789 Boulevard Mohammed V', 'Casablanca', 'Maroc', '20000', 'AR', true, NOW(), NOW());
+('Jean', 'Dupont', 'jean.dupont@email.com', '$2a$10$rDmFN6ZJvwFqMz1qkqkqUOqkqkqkqkqkqkqkqkqkqkqkqkqkqkqk', '+33123456789', '123 Rue de Paris', 'Paris', 'France', '75001', 'FR', true, NOW(), NOW()),
+('Marie', 'Martin', 'marie.martin@email.com', '$2a$10$rDmFN6ZJvwFqMz1qkqkqUOqkqkqkqkqkqkqkqkqkqkqkqkqkqkqk', '+33123456790', '456 Avenue des Champs-Élysées', 'Paris', 'France', '75008', 'FR', true, NOW(), NOW()),
+('Ahmed', 'Benali', 'ahmed.benali@email.com', '$2a$10$rDmFN6ZJvwFqMz1qkqkqUOqkqkqkqkqkqkqkqkqkqkqkqkqkqkqk', '+212123456789', '789 Boulevard Mohammed V', 'Casablanca', 'Maroc', '20000', 'AR', true, NOW(), NOW());
+
+-- Insertion des rôles utilisateurs
+INSERT INTO utilisateur_roles (utilisateur_id, role) VALUES
+(1, 'ROLE_USER'),
+(2, 'ROLE_USER'),
+(3, 'ROLE_USER');
 
 -- Insertion des organisations
 INSERT INTO organisation (nom, adresse_legale, numero_identification_fiscale, nom_contact_principal, email_contact_principal, telephone_contact_principal, url_logo, description_mission, est_approuvee, date_creation, date_modification, admin_id) VALUES 

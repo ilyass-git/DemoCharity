@@ -3,12 +3,12 @@ package com.charityapp.controllers;
 import com.charityapp.entities.Utilisateur;
 import com.charityapp.services.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/utilisateurs")
@@ -21,45 +21,54 @@ public class UtilisateurController {
         this.utilisateurService = utilisateurService;
     }
     
+    @GetMapping("/me")
+    public ResponseEntity<Utilisateur> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Utilisateur utilisateur = utilisateurService.findByEmail(email);
+        if (utilisateur != null) {
+            return ResponseEntity.ok(utilisateur);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    
     @GetMapping
     public ResponseEntity<List<Utilisateur>> getAllUtilisateurs() {
-        List<Utilisateur> utilisateurs = utilisateurService.getAllUtilisateurs();
-        return new ResponseEntity<>(utilisateurs, HttpStatus.OK);
+        return ResponseEntity.ok(utilisateurService.getAllUtilisateurs());
     }
     
     @GetMapping("/{id}")
     public ResponseEntity<Utilisateur> getUtilisateurById(@PathVariable Long id) {
-        Optional<Utilisateur> utilisateur = utilisateurService.getUtilisateurById(id);
-        return utilisateur.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        try {
+            Utilisateur utilisateur = utilisateurService.getUtilisateurById(id);
+            return ResponseEntity.ok(utilisateur);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
     
     @PostMapping
     public ResponseEntity<Utilisateur> createUtilisateur(@RequestBody Utilisateur utilisateur) {
-        Utilisateur savedUtilisateur = utilisateurService.saveUtilisateur(utilisateur);
-        return new ResponseEntity<>(savedUtilisateur, HttpStatus.CREATED);
+        return ResponseEntity.ok(utilisateurService.saveUtilisateur(utilisateur));
     }
     
     @PutMapping("/{id}")
     public ResponseEntity<Utilisateur> updateUtilisateur(@PathVariable Long id, @RequestBody Utilisateur utilisateur) {
-        Optional<Utilisateur> existingUtilisateur = utilisateurService.getUtilisateurById(id);
-        if (existingUtilisateur.isPresent()) {
+        try {
             utilisateur.setId(id);
-            Utilisateur updatedUtilisateur = utilisateurService.saveUtilisateur(utilisateur);
-            return new ResponseEntity<>(updatedUtilisateur, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok(utilisateurService.saveUtilisateur(utilisateur));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUtilisateur(@PathVariable Long id) {
-        Optional<Utilisateur> existingUtilisateur = utilisateurService.getUtilisateurById(id);
-        if (existingUtilisateur.isPresent()) {
+        try {
             utilisateurService.deleteUtilisateur(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 } 

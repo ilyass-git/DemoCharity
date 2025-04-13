@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UtilisateurService {
@@ -22,8 +21,9 @@ public class UtilisateurService {
         return utilisateurRepository.findAll();
     }
     
-    public Optional<Utilisateur> getUtilisateurById(Long id) {
-        return utilisateurRepository.findById(id);
+    public Utilisateur getUtilisateurById(Long id) {
+        return utilisateurRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé avec l'id : " + id));
     }
     
     public Utilisateur saveUtilisateur(Utilisateur utilisateur) {
@@ -31,6 +31,14 @@ public class UtilisateurService {
     }
     
     public void deleteUtilisateur(Long id) {
+        if (!utilisateurRepository.existsById(id)) {
+            throw new RuntimeException("Utilisateur non trouvé avec l'id : " + id);
+        }
         utilisateurRepository.deleteById(id);
+    }
+
+    public Utilisateur findByEmail(String email) {
+        return utilisateurRepository.findByEmail(email)
+                .orElse(null);
     }
 } 

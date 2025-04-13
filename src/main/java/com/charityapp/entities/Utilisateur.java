@@ -5,15 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Utilisateur {
+public class Utilisateur implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -75,6 +80,11 @@ public class Utilisateur {
     )
     private List<Categorie> interets;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "utilisateur_roles", joinColumns = @JoinColumn(name = "utilisateur_id"))
+    @Column(name = "role")
+    private List<String> roles;
+
     @PrePersist
     protected void onCreate() {
         dateCreation = new Date();
@@ -84,5 +94,54 @@ public class Utilisateur {
     @PreUpdate
     protected void onUpdate() {
         dateModification = new Date();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getPassword() {
+        return motDePasse;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public void setPassword(String password) {
+        this.motDePasse = password;
+    }
+    
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+    
+    public void setMotDePasse(String motDePasse) {
+        this.motDePasse = motDePasse;
     }
 } 
