@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CategorieService {
+public class CategorieService implements ICategorieService {
     
     private final CategorieRepository categorieRepository;
     
@@ -14,19 +14,31 @@ public class CategorieService {
         this.categorieRepository = categorieRepository;
     }
     
+    @Override
     public List<Categorie> getAllCategories() {
         return categorieRepository.findAll();
     }
     
+    @Override
     public Categorie getCategorieById(Long id) {
         return categorieRepository.findById(id).orElse(null);
     }
     
+    @Override
     public Categorie saveCategorie(Categorie categorie) {
         return categorieRepository.save(categorie);
     }
     
+    @Override
     public void deleteCategorie(Long id) {
         categorieRepository.deleteById(id);
+    }
+    
+    @Override
+    public Categorie getCategorieByNom(String nom) {
+        return categorieRepository.findAll().stream()
+            .filter(categorie -> categorie.getNom().equalsIgnoreCase(nom))
+            .findFirst()
+            .orElse(null);
     }
 } 

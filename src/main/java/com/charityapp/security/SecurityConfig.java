@@ -38,11 +38,31 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
+                // Routes publiques
                 .requestMatchers("/api/test").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/", "/login", "/register").permitAll()
+                .requestMatchers("/api/actions").permitAll()
+                .requestMatchers("/api/actions/public/**").permitAll()
+                .requestMatchers("/api/categories").permitAll()
+                .requestMatchers("/api/categories/public/**").permitAll()
+                .requestMatchers("/api/organisations").permitAll()
+                .requestMatchers("/api/organisations/public/**").permitAll()
+                .requestMatchers("/", "/login", "/register", "/home").permitAll()
                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                .anyRequest().authenticated()
+                
+                // Routes protégées - spécifiques pour éviter les conflits
+                .requestMatchers("/api/actions/create").authenticated()
+                .requestMatchers("/api/actions/update/**").authenticated()
+                .requestMatchers("/api/actions/delete/**").authenticated()
+                .requestMatchers("/api/categories/create").authenticated()
+                .requestMatchers("/api/categories/update/**").authenticated()
+                .requestMatchers("/api/categories/delete/**").authenticated()
+                .requestMatchers("/api/organisations/create").authenticated()
+                .requestMatchers("/api/organisations/update/**").authenticated()
+                .requestMatchers("/api/organisations/delete/**").authenticated()
+                .requestMatchers("/api/utilisateurs/**").authenticated()
+                .requestMatchers("/api/dons/**").authenticated()
+                .anyRequest().permitAll()
             )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

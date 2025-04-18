@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Date;
 import java.util.List;
@@ -21,25 +22,25 @@ public class Organisation {
     @Column(nullable = false)
     private String nom;
 
-    @Column(nullable = false)
+    @Column
     private String adresseLegale;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String numeroIdentificationFiscale;
 
-    @Column(nullable = false)
+    @Column
     private String nomContactPrincipal;
 
-    @Column(nullable = false)
+    @Column
     private String emailContactPrincipal;
 
-    @Column(nullable = false)
+    @Column
     private String telephoneContactPrincipal;
 
-    @Column(nullable = false)
+    @Column
     private String urlLogo;
 
-    @Column(nullable = false, length = 1000)
+    @Column(length = 1000)
     private String descriptionMission;
 
     @Column(nullable = false)
@@ -53,10 +54,11 @@ public class Organisation {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateModification;
 
-    @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("organisation")
     private List<ActionDeCharite> actionsDeCharite;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "admin_id")
     @JsonIgnore
     private Utilisateur admin;

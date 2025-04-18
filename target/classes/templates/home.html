@@ -1,78 +1,244 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CharityApp - Faites la différence</title>
-    <!-- Bootstrap CSS -->
+    <title>HopeShare - Accueil</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --accent-color: #FFC107;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: var(--primary-color) !important;
+        }
+
+        .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
         .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
             background-position: center;
-            height: 60vh;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #388E3C;
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+            margin: 1rem auto;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 500;
+        }
+
+        .badge-primary {
+            background-color: var(--primary-color);
+        }
+
+        .badge-secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .badge-warning {
+            background-color: var(--accent-color);
+            color: #333;
+        }
+
+        .premium-content {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .premium-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
             color: white;
+            padding: 1rem;
+            text-align: center;
         }
-        .category-card {
-            transition: transform 0.3s;
+
+        .premium-overlay i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
         }
-        .category-card:hover {
-            transform: translateY(-5px);
+
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 3rem 0;
+            margin-top: auto;
         }
-        .action-card {
-            height: 100%;
-            transition: transform 0.3s;
+
+        .footer h5 {
+            font-weight: bold;
+            margin-bottom: 1.5rem;
         }
-        .action-card:hover {
-            transform: translateY(-5px);
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
         }
-        .progress {
-            height: 25px;
+
+        .footer a:hover {
+            color: var(--accent-color);
         }
-        .organisation-card {
-            transition: transform 0.3s;
+
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            margin-right: 10px;
+            transition: all 0.3s ease;
         }
-        .organisation-card:hover {
-            transform: translateY(-5px);
+
+        .social-icons a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
         }
-        /* Styles pour les boutons de connexion/déconnexion */
-        #loginButton {
-            display: block;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        #logoutButton {
-            display: none;
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="/">CharityApp</a>
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heart me-2"></i>HopeShare
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#actions">Actions</a>
+                        <a class="nav-link active" href="/"><i class="fas fa-home me-1"></i>Accueil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#categories">Catégories</a>
+                        <a class="nav-link" href="/login" id="loginButton"><i class="fas fa-sign-in-alt me-1"></i>Connexion</a>
+                    </li>
+                    <li class="nav-item d-none" id="logoutButton">
+                        <a class="nav-link" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-1"></i>Déconnexion</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#organisations">Organisations</a>
-                    </li>
-                    <li class="nav-item" id="loginButton">
-                        <a class="nav-link" href="/login"><span class="btn btn-primary ms-2">Se connecter</span></a>
-                    </li>
-                    <li class="nav-item" id="logoutButton">
-                        <a class="nav-link" href="#" onclick="handleLogout()"><span class="btn btn-danger ms-2">Se déconnecter</span></a>
+                        <a class="nav-link" href="/register"><i class="fas fa-user-plus me-1"></i>Inscription</a>
                     </li>
                 </ul>
             </div>
@@ -81,173 +247,218 @@
 
     <!-- Hero Section -->
     <section class="hero-section">
-        <div class="container text-center">
-            <h1 class="display-4">Faites la différence aujourd'hui</h1>
-            <p class="lead">Rejoignez notre communauté et participez à des actions caritatives qui changent des vies</p>
-            <a href="#actions" class="btn btn-primary btn-lg">Découvrir les actions</a>
+        <div class="container">
+            <h1 class="fade-in">Bienvenue sur HopeShare</h1>
+            <p class="fade-in">Une plateforme dédiée à la promotion et au soutien des actions de charité. Ensemble, nous pouvons faire la différence.</p>
+            <a href="#actions" class="btn btn-primary btn-lg fade-in">
+                <i class="fas fa-hands-helping me-2"></i>Découvrir les actions
+            </a>
         </div>
     </section>
 
-    <!-- Actions Section -->
-    <section id="actions" class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-4">Actions en cours</h2>
-            <div class="row g-4">
-                <div th:if="${actions != null and !actions.empty}" class="col-md-4" th:each="action : ${actions}">
-                    <div class="card action-card">
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${action.titre}">Titre de l'action</h5>
-                            <p class="card-text" th:text="${action.description}">Description</p>
-                            <div class="progress mb-3">
-                                <div class="progress-bar" role="progressbar" 
-                                     th:style="'width: ' + ${(action.montantActuel / action.objectifCollecte) * 100} + '%'"
-                                     th:text="${#numbers.formatDecimal((action.montantActuel / action.objectifCollecte) * 100, 0, 1) + '%'}">
-                                </div>
-                            </div>
-                            <p class="mb-2">
-                                <strong>Objectif:</strong> 
-                                <span th:text="${#numbers.formatDecimal(action.objectifCollecte, 0, 2) + ' €'}">0 €</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div th:if="${actions == null or actions.empty}" class="col-12 text-center">
-                    <p>Aucune action en cours pour le moment.</p>
-                </div>
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Actions de charité -->
+        <section id="actions" class="mb-5">
+            <h2 class="section-title">Actions de charité</h2>
+            <div class="row" id="charityActions">
+                <!-- Les actions seront chargées dynamiquement ici -->
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Categories Section -->
-    <section id="categories" class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-4">Catégories</h2>
-            <div class="row g-4">
-                <div th:if="${categories != null and !categories.empty}" class="col-md-3" th:each="categorie : ${categories}">
-                    <div class="card category-card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title" th:text="${categorie.nom}">Nom de la catégorie</h5>
-                            <p class="card-text" th:text="${categorie.description}">Description</p>
-                        </div>
-                    </div>
-                </div>
-                <div th:if="${categories == null or categories.empty}" class="col-12 text-center">
-                    <p>Aucune catégorie disponible pour le moment.</p>
-                </div>
+        <!-- Catégories -->
+        <section id="categories" class="mb-5">
+            <h2 class="section-title">Catégories</h2>
+            <div class="row" id="categories">
+                <!-- Les catégories seront chargées dynamiquement ici -->
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Organisations Section -->
-    <section id="organisations" class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-4">Nos Organisations Partenaires</h2>
-            <div class="row g-4">
-                <div th:if="${organisations != null and !organisations.empty}" class="col-md-4" th:each="organisation : ${organisations}">
-                    <div class="card organisation-card">
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${organisation.nom}">Nom de l'organisation</h5>
-                            <p class="card-text" th:text="${organisation.mission}">Mission</p>
-                            <p class="card-text">
-                                <small class="text-muted">
-                                    <i class="fas fa-map-marker-alt"></i> 
-                                    <span th:text="${organisation.adresse + ', ' + organisation.ville}">Adresse</span>
-                                </small>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div th:if="${organisations == null or organisations.empty}" class="col-12 text-center">
-                    <p>Aucune organisation partenaire pour le moment.</p>
-                </div>
+        <!-- Organisations -->
+        <section id="organisations" class="mb-5">
+            <h2 class="section-title">Organisations</h2>
+            <div class="row" id="organisations">
+                <!-- Les organisations seront chargées dynamiquement ici -->
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
+    <footer class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
-                    <h5>CharityApp</h5>
-                    <p>Faites la différence, un don à la fois.</p>
+                <div class="col-md-4">
+                    <h5>À propos de HopeShare</h5>
+                    <p>Une plateforme dédiée à la promotion et au soutien des actions de charité. Ensemble, nous pouvons faire la différence.</p>
+                    <div class="social-icons mt-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <p>Contact: contact@charityapp.com</p>
+                <div class="col-md-4">
+                    <h5>Liens rapides</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/"><i class="fas fa-chevron-right me-2"></i>Accueil</a></li>
+                        <li><a href="/login"><i class="fas fa-chevron-right me-2"></i>Connexion</a></li>
+                        <li><a href="/register"><i class="fas fa-chevron-right me-2"></i>Inscription</a></li>
+                        <li><a href="#actions"><i class="fas fa-chevron-right me-2"></i>Actions de charité</a></li>
+                        <li><a href="#categories"><i class="fas fa-chevron-right me-2"></i>Catégories</a></li>
+                        <li><a href="#organisations"><i class="fas fa-chevron-right me-2"></i>Organisations</a></li>
+                    </ul>
                 </div>
+                <div class="col-md-4">
+                    <h5>Contact</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-map-marker-alt me-2"></i>123 Rue de la Charité, 75001 Paris</li>
+                        <li><i class="fas fa-envelope me-2"></i>contact@hopeshare.com</li>
+                        <li><i class="fas fa-phone me-2"></i>+33 1 23 45 67 89</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-4 mb-4">
+            <div class="text-center">
+                <p>&copy; 2024 HopeShare. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Authentication Script -->
+    <script src="/js/auth.js"></script>
     <script>
-        // Vérifier immédiatement si l'utilisateur est connecté
-        (function() {
-            const token = localStorage.getItem('token');
-            const loginButton = document.getElementById('loginButton');
-            const logoutButton = document.getElementById('logoutButton');
-            
-            if (token) {
-                // L'utilisateur est connecté
-                loginButton.style.display = 'none';
-                logoutButton.style.display = 'block';
-            } else {
-                // L'utilisateur n'est pas connecté
-                loginButton.style.display = 'block';
-                logoutButton.style.display = 'none';
-            }
-        })();
-        
-        // Vérifier à nouveau après le chargement complet du DOM
-        document.addEventListener('DOMContentLoaded', function() {
-            const token = localStorage.getItem('token');
-            const loginButton = document.getElementById('loginButton');
-            const logoutButton = document.getElementById('logoutButton');
-            
-            if (token) {
-                // L'utilisateur est connecté
-                loginButton.style.display = 'none';
-                logoutButton.style.display = 'block';
-            } else {
-                // L'utilisateur n'est pas connecté
-                loginButton.style.display = 'block';
-                logoutButton.style.display = 'none';
-            }
-        });
-        
-        // Gérer la déconnexion
-        function handleLogout() {
-            // Supprimer le token
-            localStorage.removeItem('token');
-            
-            // Mettre à jour l'interface
-            const loginButton = document.getElementById('loginButton');
-            const logoutButton = document.getElementById('logoutButton');
-            loginButton.style.display = 'block';
-            logoutButton.style.display = 'none';
-            
-            // Afficher un message de confirmation
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'alert alert-success alert-dismissible fade show';
-            messageDiv.setAttribute('role', 'alert');
-            messageDiv.innerHTML = `
-                <strong>Déconnexion réussie!</strong> Vous avez été déconnecté avec succès.
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            `;
-            
-            // Insérer le message après la section hero
-            const heroSection = document.querySelector('.hero-section');
-            heroSection.parentNode.insertBefore(messageDiv, heroSection.nextSibling);
-            
-            // Supprimer le message après 5 secondes
-            setTimeout(() => {
-                messageDiv.classList.remove('show');
-                setTimeout(() => messageDiv.remove(), 150);
-            }, 5000);
+        // Fonction pour charger les actions de charité
+        function loadCharityActions() {
+            const actionsContainer = document.getElementById('charityActions');
+            actionsContainer.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Chargement...</span></div></div>';
+
+            fetch('/api/actions/public')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors du chargement des actions');
+                    }
+                    return response.json();
+                })
+                .then(actions => {
+                    if (actions.length === 0) {
+                        actionsContainer.innerHTML = '<div class="alert alert-info">Aucune action de charité disponible pour le moment.</div>';
+                        return;
+                    }
+
+                    const actionsHtml = actions.map(action => `
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">${action.titre}</h5>
+                                    <p class="card-text">${action.description}</p>
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar" role="progressbar" 
+                                             style="width: ${(action.montantActuel / action.objectifCollecte * 100)}%">
+                                            ${Math.round(action.montantActuel / action.objectifCollecte * 100)}%
+                                        </div>
+                                    </div>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            Objectif: ${action.objectifCollecte}€ | 
+                                            Collecté: ${action.montantActuel}€
+                                        </small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    actionsContainer.innerHTML = actionsHtml;
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    actionsContainer.innerHTML = '<div class="alert alert-danger">Erreur lors du chargement des actions de charité.</div>';
+                });
         }
+
+        // Fonction pour charger les catégories
+        function loadCategories() {
+            const categoriesContainer = document.getElementById('categories');
+            categoriesContainer.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Chargement...</span></div></div>';
+
+            fetch('/api/categories/public')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors du chargement des catégories');
+                    }
+                    return response.json();
+                })
+                .then(categories => {
+                    if (categories.length === 0) {
+                        categoriesContainer.innerHTML = '<div class="alert alert-info">Aucune catégorie disponible pour le moment.</div>';
+                        return;
+                    }
+
+                    const categoriesHtml = categories.map(category => `
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">${category.nom}</h5>
+                                    <p class="card-text">${category.description}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    categoriesContainer.innerHTML = categoriesHtml;
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    categoriesContainer.innerHTML = '<div class="alert alert-danger">Erreur lors du chargement des catégories.</div>';
+                });
+        }
+
+        // Fonction pour charger les organisations
+        function loadOrganisations() {
+            const organisationsContainer = document.getElementById('organisations');
+            organisationsContainer.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Chargement...</span></div></div>';
+
+            fetch('/api/organisations/public')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors du chargement des organisations');
+                    }
+                    return response.json();
+                })
+                .then(organisations => {
+                    if (organisations.length === 0) {
+                        organisationsContainer.innerHTML = '<div class="alert alert-info">Aucune organisation disponible pour le moment.</div>';
+                        return;
+                    }
+
+                    const organisationsHtml = organisations.map(org => `
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">${org.nom}</h5>
+                                    <p class="card-text">${org.descriptionMission}</p>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            Contact: ${org.nomContactPrincipal}<br>
+                                            Email: ${org.emailContactPrincipal}
+                                        </small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    organisationsContainer.innerHTML = organisationsHtml;
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    organisationsContainer.innerHTML = '<div class="alert alert-danger">Erreur lors du chargement des organisations.</div>';
+                });
+        }
+
+        // Charger les données au chargement de la page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCharityActions();
+            loadCategories();
+            loadOrganisations();
+        });
     </script>
 </body>
 </html> 

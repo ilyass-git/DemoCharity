@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class Categorie {
     @Column(nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "categorie")
+    @OneToMany(mappedBy = "categorie", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("categorie")
     private List<ActionDeCharite> actionsDeCharite;
 } 

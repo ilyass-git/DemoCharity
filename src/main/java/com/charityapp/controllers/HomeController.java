@@ -1,8 +1,8 @@
 package com.charityapp.controllers;
 
-import com.charityapp.services.ActionDeChariteService;
-import com.charityapp.services.CategorieService;
-import com.charityapp.services.OrganisationService;
+import com.charityapp.services.IActionDeChariteService;
+import com.charityapp.services.ICategorieService;
+import com.charityapp.services.IOrganisationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -14,13 +14,13 @@ public class HomeController {
 
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-    private final ActionDeChariteService actionDeChariteService;
-    private final CategorieService categorieService;
-    private final OrganisationService organisationService;
+    private final IActionDeChariteService actionDeChariteService;
+    private final ICategorieService categorieService;
+    private final IOrganisationService organisationService;
 
-    public HomeController(ActionDeChariteService actionDeChariteService,
-                         CategorieService categorieService,
-                         OrganisationService organisationService) {
+    public HomeController(IActionDeChariteService actionDeChariteService,
+                         ICategorieService categorieService,
+                         IOrganisationService organisationService) {
         this.actionDeChariteService = actionDeChariteService;
         this.categorieService = categorieService;
         this.organisationService = organisationService;
@@ -30,7 +30,7 @@ public class HomeController {
     public String home(Model model) {
         logger.info("Accès à la page d'accueil");
         try {
-            model.addAttribute("actions", actionDeChariteService.getAllActionsDeCharite());
+            model.addAttribute("actions", actionDeChariteService.getAllActions());
             model.addAttribute("categories", categorieService.getAllCategories());
             model.addAttribute("organisations", organisationService.getAllOrganisations());
             logger.info("Données chargées avec succès pour la page d'accueil");
@@ -52,4 +52,4 @@ public class HomeController {
         logger.info("Accès à la page d'inscription");
         return "register";
     }
-} 
+}

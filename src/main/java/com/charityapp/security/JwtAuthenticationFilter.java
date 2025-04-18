@@ -13,12 +13,30 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    
+    // Liste des endpoints publics qui ne nécessitent pas d'authentification
+    private final List<String> publicEndpoints = Arrays.asList(
+        "/api/actions",
+        "/api/categories",
+        "/api/organisations",
+        "/api/auth",
+        "/api/test",
+        "/",
+        "/login",
+        "/register",
+        "/home",
+        "/css/",
+        "/js/",
+        "/images/"
+    );
 
     public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
         this.jwtService = jwtService;
@@ -31,6 +49,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+        // Vérifier si l'URL est un endpoint public
+        String requestURI = request.getRequestURI();
+        if (isPublicEndpoint(requestURI)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
@@ -57,5 +82,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+    
+    private boolean isPublicEndpoint(String requestURI) {
+        return publicEndpoints.stream().anyMatch(endpoint -> requestURI.startsWith(endpoint));
     }
 } 

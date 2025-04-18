@@ -1,5 +1,6 @@
 package com.charityapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,54 +19,61 @@ public class ActionDeCharite {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String titre;
 
-    @Column(nullable = false, length = 2000)
+    @Column(length = 2000)
     private String description;
 
-    @Column(nullable = false)
+    @Column
     private Date dateDebut;
 
-    @Column(nullable = false)
+    @Column
     private Date dateFin;
 
-    @Column(nullable = false)
+    @Column
     private String lieu;
 
-    @Column(nullable = false)
+    @Column
     private BigDecimal objectifCollecte;
 
-    @Column(nullable = false)
+    @Column
     private BigDecimal montantActuel = BigDecimal.ZERO;
 
-    @Column(nullable = false)
+    @Column
     private boolean estArchivee = false;
 
-    @Column(nullable = false)
+    @Column
     private Date dateCreation;
 
-    @Column(nullable = false)
+    @Column
     private Date dateModification;
 
-    @ManyToOne
-    @JoinColumn(name = "organisation_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "organisation_id")
+    @JsonIgnoreProperties({"actionsDeCharite", "admin"})
     private Organisation organisation;
 
-    @ManyToOne
-    @JoinColumn(name = "categorie_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "categorie_id")
+    @JsonIgnoreProperties("actionsDeCharite")
     private Categorie categorie;
 
-    @OneToMany(mappedBy = "actionDeCharite", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "actionDeCharite", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("actionDeCharite")
     private List<Don> dons;
 
-    @OneToMany(mappedBy = "actionDeCharite", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "actionDeCharite", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("actionDeCharite")
     private List<Media> medias;
 
     @PrePersist
     protected void onCreate() {
         dateCreation = new Date();
         dateModification = new Date();
+        if (montantActuel == null) {
+            montantActuel = BigDecimal.ZERO;
+        }
     }
 
     @PreUpdate
