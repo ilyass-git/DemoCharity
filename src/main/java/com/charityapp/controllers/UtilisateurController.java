@@ -25,7 +25,7 @@ public class UtilisateurController {
     public ResponseEntity<Utilisateur> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        Utilisateur utilisateur = utilisateurService.findByEmail(email);
+        Utilisateur utilisateur = utilisateurService.getUtilisateurByEmail(email);
         if (utilisateur != null) {
             return ResponseEntity.ok(utilisateur);
         }
