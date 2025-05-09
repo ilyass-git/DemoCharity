@@ -3,6 +3,7 @@ package com.charityapp.controllers;
 import com.charityapp.dto.ActionChariteDTO;
 import com.charityapp.entities.ActionDeCharite;
 import com.charityapp.entities.Categorie;
+import com.charityapp.entities.Media;
 import com.charityapp.services.IActionDeChariteService;
 import com.charityapp.services.ICategorieService;
 import lombok.RequiredArgsConstructor;
@@ -47,19 +48,9 @@ public class ActionDeChariteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ActionDeCharite> getActionById(@PathVariable Long id) {
-        logger.info("Récupération de l'action de charité avec l'ID: {}", id);
-        try {
-            ActionDeCharite action = actionDeChariteService.getActionById(id);
-            if (action == null) {
-                logger.warn("Action de charité non trouvée avec l'ID: {}", id);
-                return ResponseEntity.notFound().build();
-            }
-            logger.info("Action récupérée avec succès: {}", action.getId());
-            return ResponseEntity.ok(action);
-        } catch (Exception e) {
-            logger.error("Erreur lors de la récupération de l'action: {}", e.getMessage(), e);
-            throw e;
-        }
+        return actionDeChariteService.getActionById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -95,59 +86,46 @@ public class ActionDeChariteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateAction(@PathVariable Long id, @RequestBody ActionChariteDTO dto) {
-        logger.info("Mise à jour de l'action de charité avec l'ID: {}", id);
-        try {
-            ActionDeCharite existingAction = actionDeChariteService.getActionById(id);
-            if (existingAction == null) {
-                logger.warn("Action de charité non trouvée avec l'ID: {}", id);
-                return ResponseEntity.notFound().build();
-            }
-
-            // Vérifier si la catégorie existe
-            Categorie categorie = categorieService.getCategorieById(dto.getCategorieId());
-            if (categorie == null) {
-                logger.warn("Catégorie non trouvée avec l'ID: {}", dto.getCategorieId());
-                return ResponseEntity.badRequest().body("Catégorie non trouvée");
-            }
-
-            // Mettre à jour l'action
-            existingAction.setTitre(dto.getTitre());
-            existingAction.setDescription(dto.getDescription());
-            existingAction.setDateDebut(Date.from(dto.getDateDebut().atZone(ZoneId.systemDefault()).toInstant()));
-            existingAction.setDateFin(Date.from(dto.getDateFin().atZone(ZoneId.systemDefault()).toInstant()));
-            existingAction.setLieu(dto.getLieu());
-            existingAction.setObjectifCollecte(dto.getObjectifCollecte());
-            existingAction.setCategorie(categorie);
-
-            // Sauvegarder l'action mise à jour
-            ActionDeCharite updatedAction = actionDeChariteService.saveAction(existingAction);
-            logger.info("Action de charité mise à jour avec succès: {}", updatedAction.getId());
-            
-            return ResponseEntity.ok(updatedAction);
-        } catch (Exception e) {
-            logger.error("Erreur lors de la mise à jour de l'action de charité: {}", e.getMessage(), e);
-            return ResponseEntity.badRequest().body("Erreur lors de la mise à jour de l'action: " + e.getMessage());
-        }
+    public ResponseEntity<ActionDeCharite> mettreAJourAction(
+            @PathVariable Long id,
+            @RequestBody ActionDeCharite actionDetails) {
+        return actionDeChariteService.getActionById(id)
+                .map(existingAction -> {
+                    ActionDeCharite updatedAction = actionDeChariteService.mettreAJourAction(id, actionDetails);
+                    return ResponseEntity.ok(updatedAction);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAction(@PathVariable Long id) {
         logger.info("Suppression de l'action de charité avec l'ID: {}", id);
         try {
-            ActionDeCharite action = actionDeChariteService.getActionById(id);
-            if (action == null) {
-                logger.warn("Action de charité non trouvée avec l'ID: {}", id);
-                return ResponseEntity.notFound().build();
-            }
-            
-            actionDeChariteService.deleteAction(id);
-            logger.info("Action de charité supprimée avec succès: {}", id);
-            
-            return ResponseEntity.ok().build();
+            return actionDeChariteService.getActionById(id)
+                    .map(action -> {
+                        actionDeChariteService.deleteAction(id);
+                        logger.info("Action de charité supprimée avec succès: {}", id);
+                        return ResponseEntity.ok().build();
+                    })
+                    .orElseGet(() -> {
+                        logger.warn("Action de charité non trouvée avec l'ID: {}", id);
+                        return ResponseEntity.notFound().build();
+                    });
         } catch (Exception e) {
             logger.error("Erreur lors de la suppression de l'action de charité: {}", e.getMessage(), e);
             return ResponseEntity.badRequest().body("Erreur lors de la suppression de l'action: " + e.getMessage());
         }
+    }
+
+    @PostMapping("/{id}/media")
+    public ResponseEntity<ActionDeCharite> ajouterMedia(
+            @PathVariable Long id,
+            @RequestBody Media media) {
+        return actionDeChariteService.getActionById(id)
+                .map(existingAction -> {
+                    ActionDeCharite updatedAction = actionDeChariteService.ajouterMedia(id, media);
+                    return ResponseEntity.ok(updatedAction);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 } 

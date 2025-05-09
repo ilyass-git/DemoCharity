@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Actions</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .action-card {
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s;
+        }
+        .action-card:hover {
+            transform: translateY(-5px);
+        }
+        .action-image {
+            height: 200px;
+            object-fit: cover;
+        }
+        .progress {
+            height: 20px;
+        }
+        .modal-lg {
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Mes Actions Caritatives</h2>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newActionModal">
+                <i class="fas fa-plus"></i> Nouvelle Action
+            </button>
+        </div>
+
+        <!-- Liste des actions -->
+        <div class="row" id="actionsList">
+            <!-- Les actions seront ajoutées dynamiquement ici -->
+        </div>
+
+        <!-- Modal Nouvelle Action -->
+        <div class="modal fade" id="newActionModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Nouvelle Action Caritative</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="newActionForm">
+                            <div class="mb-3">
+                                <label for="titre" class="form-label required-field">Titre</label>
+                                <input type="text" class="form-control" id="titre" name="titre" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="description" class="form-label required-field">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="dateDebut" class="form-label required-field">Date de début</label>
+                                    <input type="date" class="form-control" id="dateDebut" name="dateDebut" required>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="dateFin" class="form-label required-field">Date de fin</label>
+                                    <input type="date" class="form-control" id="dateFin" name="dateFin" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="lieu" class="form-label required-field">Lieu</label>
+                                <input type="text" class="form-control" id="lieu" name="lieu" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="objectifDons" class="form-label required-field">Objectif de dons</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="objectifDons" name="objectifDons" required>
+                                    <span class="input-group-text">€</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Image</label>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                                <div id="imagePreview" class="mt-2"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="video" class="form-label">Vidéo</label>
+                                <input type="file" class="form-control" id="video" name="video" accept="video/*">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="saveAction">Publier</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Chargement des actions
+        function loadActions() {
+            fetch('/api/organisations/actions')
+                .then(response => response.json())
+                .then(actions => {
+                    const actionsList = document.getElementById('actionsList');
+                    actionsList.innerHTML = '';
+                    
+                    actions.forEach(action => {
+                        const progress = (action.montantActuel / action.objectifDons) * 100;
+                        actionsList.innerHTML += `
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card action-card">
+                                    <img src="${action.imageUrl || '/images/default.jpg'}" class="card-img-top action-image" alt="${action.titre}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${action.titre}</h5>
+                                        <p class="card-text">${action.description}</p>
+                                        <div class="progress mb-3">
+                                            <div class="progress-bar" role="progressbar" style="width: ${progress}%">
+                                                ${progress.toFixed(1)}%
+                                            </div>
+                                        </div>
+                                        <p class="card-text">
+                                            <small class="text-muted">
+                                                Objectif: ${action.objectifDons}€ | 
+                                                Collecté: ${action.montantActuel}€
+                                            </small>
+                                        </p>
+                                        <div class="d-flex justify-content-between">
+                                            <button class="btn btn-sm btn-outline-primary" onclick="editAction(${action.id})">
+                                                <i class="fas fa-edit"></i> Modifier
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="archiveAction(${action.id})">
+                                                <i class="fas fa-archive"></i> Archiver
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                })
+                .catch(error => console.error('Erreur lors du chargement des actions:', error));
+        }
+
+        // Prévisualisation de l'image
+        document.getElementById('image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.innerHTML = `<img src="${e.target.result}" class="img-fluid" alt="Preview">`;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Sauvegarde d'une nouvelle action
+        document.getElementById('saveAction').addEventListener('click', function() {
+            const form = document.getElementById('newActionForm');
+            const formData = new FormData(form);
+            
+            fetch('/api/organisations/actions', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    bootstrap.Modal.getInstance(document.getElementById('newActionModal')).hide();
+                    loadActions();
+                    form.reset();
+                } else {
+                    throw new Error('Erreur lors de la création de l\'action');
+                }
+            })
+            .catch(error => alert('Erreur: ' + error.message));
+        });
+
+        // Chargement initial des actions
+        loadActions();
+    </script>
+</body>
+</html> 

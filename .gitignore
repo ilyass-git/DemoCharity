@@ -1,28 +1,27 @@
-# Environment variables and sensitive data
-.env
-application-dev.properties
-application-local.properties
-application-prod.properties
+# Fichiers de configuration sensibles
+src/main/resources/application.properties
 
-# Build files
+# Fichiers de build
 target/
 *.class
 *.jar
 *.war
-*.ear
 
-# IDE files
+# Fichiers d'IDE
 .idea/
 *.iml
 .vscode/
-.settings/
-.project
-.classpath
+*.sublime-workspace
+*.sublime-project
+
+# Fichiers système
+.DS_Store
+Thumbs.db
 
 # Logs
 *.log
 logs/
 
-# OS specific files
-.DS_Store
-Thumbs.db 
+# Fichiers temporaires
+*.tmp
+*.temp 

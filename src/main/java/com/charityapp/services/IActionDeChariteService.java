@@ -1,7 +1,9 @@
 package com.charityapp.services;
 
 import com.charityapp.entities.ActionDeCharite;
+import com.charityapp.entities.Media;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Interface pour le service de gestion des actions de charité.
@@ -20,7 +22,7 @@ public interface IActionDeChariteService {
      * @param id ID de l'action de charité
      * @return L'action de charité correspondante ou null si non trouvée
      */
-    ActionDeCharite getActionById(Long id);
+    Optional<ActionDeCharite> getActionById(Long id);
     
     /**
      * Sauvegarde une action de charité.
@@ -60,4 +62,35 @@ public interface IActionDeChariteService {
      * @return Liste des actions de charité terminées
      */
     List<ActionDeCharite> getActionsTerminees();
+
+    /**
+     * Crée une nouvelle action de charité pour une organisation.
+     * @param organisationId ID de l'organisation
+     * @param action L'action de charité à créer
+     * @return L'action de charité créée
+     */
+    ActionDeCharite creerAction(Long organisationId, ActionDeCharite action);
+
+    /**
+     * Ajoute un média à une action de charité.
+     * @param actionId ID de l'action de charité
+     * @param media Le média à ajouter
+     * @return L'action de charité mise à jour
+     */
+    ActionDeCharite ajouterMedia(Long actionId, Media media);
+
+    /**
+     * Archive une action de charité.
+     * @param actionId ID de l'action de charité
+     * @return L'action de charité archivée
+     */
+    ActionDeCharite archiverAction(Long actionId);
+
+    /**
+     * Met à jour une action de charité.
+     * @param actionId ID de l'action de charité
+     * @param actionDetails Les nouvelles informations de l'action
+     * @return L'action de charité mise à jour
+     */
+    ActionDeCharite mettreAJourAction(Long actionId, ActionDeCharite actionDetails);
 } 

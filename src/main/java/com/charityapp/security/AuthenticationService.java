@@ -36,10 +36,10 @@ public class AuthenticationService {
         
         // Vérifier si l'utilisateur existe déjà
         if (utilisateurRepository.findByEmail(request.getEmail()).isPresent()) {
-            logger.warn("Tentative d'inscription avec un email déjà utilisé: {}", request.getEmail());
-            throw new RuntimeException("Cet email est déjà utilisé");
+            logger.error("Tentative d'inscription avec un email déjà utilisé: {}", request.getEmail());
+            throw new RuntimeException("Email déjà utilisé");
         }
-        
+
         var user = new Utilisateur();
         user.setPrenom(request.getPrenom());
         user.setNom(request.getNom());

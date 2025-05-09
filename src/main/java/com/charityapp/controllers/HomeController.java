@@ -49,7 +49,13 @@ public class HomeController {
 
     @GetMapping("/register")
     public String register() {
-        logger.info("Accès à la page d'inscription");
+        logger.info("Redirection vers la page de sélection du type d'inscription");
+        return "redirect:/register-type";
+    }
+
+    @GetMapping("/register/user")
+    public String registerUser() {
+        logger.info("Accès à la page d'inscription utilisateur");
         return "register";
     }
 }

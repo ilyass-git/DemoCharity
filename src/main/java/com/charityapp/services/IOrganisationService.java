@@ -41,11 +41,10 @@ public interface IOrganisationService {
      * @return L'organisation correspondante ou null si non trouvée
      */
     Organisation getOrganisationByNom(String nom);
-    
+
     /**
-     * Récupère les organisations par catégorie.
-     * @param categorieId ID de la catégorie
-     * @return Liste des organisations de la catégorie
+     * Récupère toutes les organisations en attente de validation.
+     * @return Liste des organisations en attente
      */
-    List<Organisation> getOrganisationsByCategorie(Long categorieId);
+    List<Organisation> getOrganisationsEnAttente();
 } 

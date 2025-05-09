@@ -8,10 +8,18 @@ function isAuthenticated() {
     return !!getToken();
 }
 
-// Function to handle logout
-function logout() {
-    localStorage.removeItem('token');
-    window.location.href = '/';
+// Function to handle OAuth2 login success
+async function handleOAuth2Success(response) {
+    try {
+        const data = await response.json();
+        if (data.token) {
+            localStorage.setItem('token', data.token);
+            window.location.href = '/';
+        }
+    } catch (error) {
+        console.error('Error handling OAuth2 success:', error);
+        window.location.href = '/login?error=Authentication+failed';
+    }
 }
 
 // Function to update UI based on authentication status
@@ -27,6 +35,12 @@ function updateAuthUI() {
         if (loginButton) loginButton.classList.remove('d-none');
         if (logoutButton) logoutButton.classList.add('d-none');
     }
+}
+
+// Function to logout
+function logout() {
+    localStorage.removeItem('token');
+    window.location.href = '/';
 }
 
 // Liste des endpoints publics qui ne nécessitent pas d'authentification
@@ -66,5 +80,14 @@ XMLHttpRequest.prototype.open = function(method, url, ...args) {
     return originalXHROpen.call(this, method, url, ...args);
 };
 
-// Initialize auth UI when DOM is loaded
-document.addEventListener('DOMContentLoaded', updateAuthUI); 
+// Check for OAuth2 response on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const oauth2Response = urlParams.get('oauth2_response');
+    
+    if (oauth2Response) {
+        handleOAuth2Success(oauth2Response);
+    }
+    
+    updateAuthUI();
+}); 

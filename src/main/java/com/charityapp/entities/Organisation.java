@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 import java.util.List;
@@ -22,55 +23,57 @@ public class Organisation {
     @Column(nullable = false)
     private String nom;
 
-    @Column
-    private String adresseLegale;
+    @Column(nullable = false, unique = true)
+    private String nif; // Numéro d'identification fiscale
 
-    @Column(unique = true)
-    private String numeroIdentificationFiscale;
+    @Column(nullable = false)
+    private String adresse;
 
-    @Column
-    private String nomContactPrincipal;
+    @Column(nullable = false)
+    private String ville;
 
-    @Column
-    private String emailContactPrincipal;
+    @Column(nullable = false)
+    private String pays;
 
-    @Column
-    private String telephoneContactPrincipal;
+    @Column(nullable = false)
+    private String codePostal;
 
-    @Column
-    private String urlLogo;
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String telephone;
 
     @Column(length = 1000)
-    private String descriptionMission;
+    private String description;
+
+    @Column
+    private String logoUrl;
 
     @Column(nullable = false)
-    private boolean estApprouvee = false;
+    @Enumerated(EnumType.STRING)
+    private StatutOrganisation statut = StatutOrganisation.EN_ATTENTE;
 
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "admin_id", nullable = false)
+    private Utilisateur admin;
+
+    @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<ActionDeCharite> actionsDeCharite;
+
+    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreation;
 
-    @Column(nullable = false)
+    @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateModification;
 
-    @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonIgnoreProperties("organisation")
-    private List<ActionDeCharite> actionsDeCharite;
+    @ManyToOne
+    @JoinColumn(name = "validateur_id")
+    private Utilisateur validateur;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "admin_id")
-    @JsonIgnore
-    private Utilisateur admin;
-
-    @PrePersist
-    protected void onCreate() {
-        dateCreation = new Date();
-        dateModification = new Date();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        dateModification = new Date();
-    }
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateValidation;
 } 

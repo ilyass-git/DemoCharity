@@ -169,6 +169,52 @@
         .requirement.invalid {
             color: #dc3545;
         }
+
+        .btn-google {
+            background-color: #fff;
+            color: #757575;
+            border: 1px solid #ddd;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-google:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .btn-google img {
+            width: 20px;
+            margin-right: 10px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .divider span {
+            padding: 0 1rem;
+            color: #757575;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -330,9 +376,18 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-user-plus me-2"></i>Créer mon compte
+                    <i class="fas fa-user-plus me-2"></i>S'inscrire
                 </button>
             </form>
+
+            <div class="divider">
+                <span>ou</span>
+            </div>
+
+            <a href="/oauth2/authorization/google" class="btn btn-google">
+                <img src="https://www.google.com/favicon.ico" alt="Google">
+                S'inscrire avec Google
+            </a>
 
             <div class="text-center mt-3">
                 <p>Déjà un compte ? <a href="/login" class="text-primary">Connectez-vous</a></p>
