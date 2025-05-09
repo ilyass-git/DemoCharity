@@ -1,27 +1,52 @@
-# Fichiers de configuration sensibles
-src/main/resources/application.properties
-
-# Fichiers de build
+HELP.md
 target/
-*.class
-*.jar
-*.war
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# Fichiers d'IDE
-.idea/
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
 *.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
 .vscode/
-*.sublime-workspace
-*.sublime-project
 
-# Fichiers système
-.DS_Store
-Thumbs.db
+### Environment Variables ###
+.env
+.env.local
+.env.*.local
 
-# Logs
+### Application Properties ###
+src/main/resources/application.properties
+src/main/resources/application-dev.properties
+src/main/resources/application-prod.properties
+src/main/resources/application-local.properties
+
+### Logs ###
 *.log
 logs/
 
-# Fichiers temporaires
-*.tmp
-*.temp 
+### System Files ###
+.DS_Store
+Thumbs.db 

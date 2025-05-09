@@ -97,7 +97,7 @@ public class OrganisationController {
             return ResponseEntity.ok(organisationService.getOrganisationById(id));
         } catch (RuntimeException e) {
             logger.error("Organisation non trouvée avec l'id: {}", id, e);
-            return ResponseEntity.notFound().build();
+                return ResponseEntity.notFound().build();
         } catch (Exception e) {
             logger.error("Erreur lors de la récupération de l'organisation", e);
             return ResponseEntity.internalServerError().build();

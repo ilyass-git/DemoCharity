@@ -18,28 +18,28 @@ import java.util.Optional;
 public class OrganisationService implements IOrganisationService {
     private final OrganisationRepository organisationRepository;
     private final UtilisateurRepository utilisateurRepository;
-
+    
     @Override
     public List<Organisation> getAllOrganisations() {
         return organisationRepository.findAll();
     }
-
+    
     @Override
     public Organisation getOrganisationById(Long id) {
         return organisationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Organisation non trouvée"));
     }
-
+    
     @Override
     public Organisation saveOrganisation(Organisation organisation) {
         return organisationRepository.save(organisation);
     }
-
+    
     @Override
     public void deleteOrganisation(Long id) {
         organisationRepository.deleteById(id);
     }
-
+    
     @Override
     public Organisation getOrganisationByNom(String nom) {
         return organisationRepository.findByNom(nom)
@@ -85,7 +85,7 @@ public class OrganisationService implements IOrganisationService {
         
         return organisationRepository.save(organisation);
     }
-
+    
     @Override
     public List<Organisation> getOrganisationsEnAttente() {
         return organisationRepository.findByStatut(StatutOrganisation.EN_ATTENTE);

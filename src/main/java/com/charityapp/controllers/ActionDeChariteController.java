@@ -92,7 +92,7 @@ public class ActionDeChariteController {
         return actionDeChariteService.getActionById(id)
                 .map(existingAction -> {
                     ActionDeCharite updatedAction = actionDeChariteService.mettreAJourAction(id, actionDetails);
-                    return ResponseEntity.ok(updatedAction);
+            return ResponseEntity.ok(updatedAction);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -103,9 +103,9 @@ public class ActionDeChariteController {
         try {
             return actionDeChariteService.getActionById(id)
                     .map(action -> {
-                        actionDeChariteService.deleteAction(id);
-                        logger.info("Action de charité supprimée avec succès: {}", id);
-                        return ResponseEntity.ok().build();
+            actionDeChariteService.deleteAction(id);
+            logger.info("Action de charité supprimée avec succès: {}", id);
+            return ResponseEntity.ok().build();
                     })
                     .orElseGet(() -> {
                         logger.warn("Action de charité non trouvée avec l'ID: {}", id);

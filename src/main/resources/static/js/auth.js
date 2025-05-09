@@ -14,7 +14,7 @@ async function handleOAuth2Success(response) {
         const data = await response.json();
         if (data.token) {
             localStorage.setItem('token', data.token);
-            window.location.href = '/';
+    window.location.href = '/';
         }
     } catch (error) {
         console.error('Error handling OAuth2 success:', error);

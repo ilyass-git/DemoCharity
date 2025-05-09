@@ -119,45 +119,81 @@ L'application expose plusieurs endpoints REST :
 - `/api/utilisateurs` : Gestion des utilisateurs
 - `/api/dons` : Gestion des dons
 
-## Installation et démarrage
+## Configuration du Projet
 
 ### Prérequis
 - Java 17 ou supérieur
-- Maven 3.6 ou supérieur
-- PostgreSQL (pour la production)
+- Maven
+- MySQL
+- Compte Google Developer (pour OAuth2)
 
-### Étapes d'installation
+### Installation
 
-1. Cloner le dépôt :
-   ```
-   git clone https://github.com/votre-utilisateur/hopeshare.git
-   cd hopeshare
-   ```
+1. Cloner le projet
+```bash
+git clone https://github.com/votre-username/hopeshare.git
+cd hopeshare
+```
 
-2. Compiler le projet :
-   ```
-   mvn clean install
-   ```
+2. Configuration de la base de données
+- Créer une base de données MySQL nommée `hopeshare`
+- Copier `src/main/resources/application.properties.example` vers `src/main/resources/application.properties`
+- Modifier les paramètres de connexion dans `application.properties`
 
-3. Lancer l'application :
-   ```
-   mvn spring-boot:run
-   ```
+3. Configuration OAuth2 Google
+- Aller sur [Google Cloud Console](https://console.cloud.google.com)
+- Créer un nouveau projet
+- Activer l'API Google+ API
+- Créer des identifiants OAuth2
+- Copier le Client ID et Client Secret dans `application.properties`
 
-4. Accéder à l'application :
-   ```
-   http://localhost:8080
-   ```
+4. Compiler et exécuter
+```bash
+mvn clean install
+mvn spring-boot:run
+```
+
+### Structure du Projet
+```
+src/
+├── main/
+│   ├── java/
+│   │   └── com/charityapp/
+│   │       ├── config/      # Configuration Spring
+│   │       ├── controllers/ # Contrôleurs REST
+│   │       ├── entities/    # Entités JPA
+│   │       ├── repositories/# Repositories Spring Data
+│   │       ├── services/    # Services métier
+│   │       └── security/    # Configuration sécurité
+│   └── resources/
+│       ├── static/         # Ressources statiques
+│       ├── templates/      # Templates Thymeleaf
+│       └── application.properties # Configuration
+```
+
+### Sécurité
+- Ne jamais commiter `application.properties` avec des valeurs réelles
+- Utiliser des variables d'environnement pour les secrets en production
+- Changer régulièrement les clés JWT et les secrets OAuth2
+- Activer HTTPS en production
+
+### Déploiement
+1. Configurer les variables d'environnement
+2. Construire le JAR
+```bash
+mvn clean package
+```
+3. Exécuter le JAR
+```bash
+java -jar target/hopeshare-0.0.1-SNAPSHOT.jar
+```
 
 ## Contribution
-
-Les contributions sont les bienvenues ! N'hésitez pas à :
 1. Fork le projet
 2. Créer une branche pour votre fonctionnalité
 3. Commiter vos changements
 4. Pousser vers la branche
-5. Ouvrir une Pull Request
+5. Créer une Pull Request
 
 ## Licence
-
-Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails. 
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails. 
