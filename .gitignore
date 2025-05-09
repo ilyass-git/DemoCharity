@@ -1,0 +1,28 @@
+# Environment variables and sensitive data
+.env
+application-dev.properties
+application-local.properties
+application-prod.properties
+
+# Build files
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Logs
+*.log
+logs/
+
+# OS specific files
+.DS_Store
+Thumbs.db 
