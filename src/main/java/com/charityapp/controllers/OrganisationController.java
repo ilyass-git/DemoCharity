@@ -84,7 +84,10 @@ public class OrganisationController {
     @GetMapping("/validees")
     public ResponseEntity<List<Organisation>> getOrganisationsValidees() {
         try {
-            return ResponseEntity.ok(organisationService.getOrganisationsValidees());
+            logger.info("Récupération des organisations validées");
+            List<Organisation> organisations = organisationService.getOrganisationsValidees();
+            logger.info("{} organisations validées trouvées", organisations.size());
+            return ResponseEntity.ok(organisations);
         } catch (Exception e) {
             logger.error("Erreur lors de la récupération des organisations validées", e);
             return ResponseEntity.internalServerError().build();

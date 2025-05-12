@@ -6,6 +6,8 @@ import com.charityapp.entities.Utilisateur;
 import com.charityapp.repositories.OrganisationRepository;
 import com.charityapp.repositories.UtilisateurRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class OrganisationService implements IOrganisationService {
     private final OrganisationRepository organisationRepository;
     private final UtilisateurRepository utilisateurRepository;
+    private static final Logger logger = LoggerFactory.getLogger(OrganisationService.class);
     
     @Override
     public List<Organisation> getAllOrganisations() {
@@ -92,7 +95,10 @@ public class OrganisationService implements IOrganisationService {
     }
 
     public List<Organisation> getOrganisationsValidees() {
-        return organisationRepository.findByStatut(StatutOrganisation.VALIDEE);
+        List<Organisation> organisations = organisationRepository.findByStatut(StatutOrganisation.VALIDEE);
+        logger.info("Nombre d'organisations validées trouvées : {}", organisations.size());
+        organisations.forEach(org -> logger.info("Organisation validée : {} (ID: {})", org.getNom(), org.getId()));
+        return organisations;
     }
 
     public List<Organisation> getOrganisationsByAdmin(Long adminId) {

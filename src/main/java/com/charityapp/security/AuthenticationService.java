@@ -5,6 +5,7 @@ import com.charityapp.repositories.UtilisateurRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,12 +40,12 @@ public class AuthenticationService {
             logger.error("Tentative d'inscription avec un email déjà utilisé: {}", request.getEmail());
             throw new RuntimeException("Email déjà utilisé");
         }
-
+        
         var user = new Utilisateur();
         user.setPrenom(request.getPrenom());
         user.setNom(request.getNom());
         user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setMotDePasse(passwordEncoder.encode(request.getPassword()));
         user.setNumeroTelephone(request.getNumeroTelephone());
         user.setAdresse(request.getAdresse());
         user.setVille(request.getVille());
@@ -71,30 +72,41 @@ public class AuthenticationService {
         logger.info("Début de l'authentification pour l'email: {}", request.getEmail());
         
         try {
-            logger.info("Tentative d'authentification avec l'email: {}", request.getEmail());
+            // Vérifier si l'utilisateur existe
+            var user = utilisateurRepository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> {
+                        logger.error("Utilisateur non trouvé: {}", request.getEmail());
+                        return new BadCredentialsException("Email ou mot de passe incorrect");
+                    });
+            
+            logger.info("Utilisateur trouvé dans la base de données: {}", user.getEmail());
+            logger.info("Hash du mot de passe stocké: {}", user.getMotDePasse());
+            logger.info("Rôles de l'utilisateur: {}", user.getRoles());
+            
+            // Authentifier l'utilisateur
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getEmail(),
                             request.getPassword()
                     )
             );
-            logger.info("Authentification réussie pour l'email: {}", request.getEmail());
-        } catch (Exception e) {
-            logger.error("Erreur d'authentification pour l'email: {} - {}", request.getEmail(), e.getMessage());
-            throw new RuntimeException("Email ou mot de passe incorrect");
-        }
-        
-        var user = utilisateurRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> {
-                    logger.error("Utilisateur non trouvé pour l'email: {}", request.getEmail());
-                    return new RuntimeException("Utilisateur non trouvé");
-                });
-        
+            
+            logger.info("Authentification réussie pour l'utilisateur: {}", user.getEmail());
+            logger.info("Rôles de l'utilisateur authentifié: {}", user.getRoles());
+            
+            // Générer le token JWT
         var jwtToken = jwtService.generateToken(user);
         logger.info("Token JWT généré pour l'utilisateur: {}", user.getEmail());
         
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+        } catch (BadCredentialsException e) {
+            logger.error("Erreur d'authentification pour l'email: {} - {}", request.getEmail(), e.getMessage());
+            throw new BadCredentialsException("Email ou mot de passe incorrect");
+        } catch (Exception e) {
+            logger.error("Erreur lors de l'authentification pour l'email: {} - {}", request.getEmail(), e.getMessage());
+            throw new RuntimeException("Erreur lors de l'authentification");
+        }
     }
 } 

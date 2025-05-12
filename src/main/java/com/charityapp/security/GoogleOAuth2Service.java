@@ -47,12 +47,16 @@ public class GoogleOAuth2Service extends DefaultOAuth2UserService {
         String[] nameParts = name.split(" ", 2);
         String prenom = nameParts[0];
         String nom = nameParts.length > 1 ? nameParts[1] : "";
+        String picture = (String) attributes.get("picture");
 
         Optional<Utilisateur> userOptional = utilisateurRepository.findByEmail(email);
         
         if (userOptional.isPresent()) {
             logger.info("Utilisateur existant connecté via Google: {}", email);
             Utilisateur user = userOptional.get();
+            user.setNom(nom);
+            user.setPrenom(prenom);
+            user.setPhoto(picture);
             return new CustomOAuth2User(user, attributes);
         } else {
             logger.info("Création d'un nouvel utilisateur via Google: {}", email);
@@ -60,8 +64,9 @@ public class GoogleOAuth2Service extends DefaultOAuth2UserService {
             newUser.setEmail(email);
             newUser.setPrenom(prenom);
             newUser.setNom(nom);
-            newUser.setPassword(UUID.randomUUID().toString()); // Mot de passe aléatoire
-            newUser.setRoles(Arrays.asList("ROLE_USER"));
+            newUser.setMotDePasse(""); // Les utilisateurs OAuth2 n'ont pas de mot de passe
+            newUser.setRoles(Collections.singletonList("ROLE_USER"));
+            newUser.setPhoto(picture);
             newUser.setNotificationsEmailActivees(true);
             
             Utilisateur savedUser = utilisateurRepository.save(newUser);

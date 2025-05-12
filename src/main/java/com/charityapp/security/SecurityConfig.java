@@ -1,4 +1,4 @@
-package com.charityapp.config;
+package com.charityapp.security;
 
 import com.charityapp.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +10,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -26,6 +27,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
@@ -48,21 +50,27 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> {
                 logger.info("Configuring authorization rules");
                 auth
-                    // Routes publiques
-                    .requestMatchers("/api/test").permitAll()
+                // Routes publiques
+                .requestMatchers("/api/test").permitAll()
                     .requestMatchers("/api/auth/**", "/register/**", "/login/**", "/register-type/**").permitAll()
                     .requestMatchers("/organisation/register", "/donateur/register").permitAll()
-                    .requestMatchers("/api/actions").permitAll()
-                    .requestMatchers("/api/actions/public/**").permitAll()
-                    .requestMatchers("/api/categories").permitAll()
-                    .requestMatchers("/api/categories/public/**").permitAll()
-                    .requestMatchers("/api/organisations").permitAll()
-                    .requestMatchers("/api/organisations/public/**").permitAll()
-                    .requestMatchers("/", "/login", "/register", "/home").permitAll()
-                    .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/api/actions").permitAll()
+                .requestMatchers("/api/actions/public/**").permitAll()
+                .requestMatchers("/api/categories").permitAll()
+                .requestMatchers("/api/categories/public/**").permitAll()
+                .requestMatchers("/api/organisations").permitAll()
+                .requestMatchers("/api/organisations/public/**").permitAll()
+                    .requestMatchers("/api/organisations/validees").permitAll()
+                .requestMatchers("/", "/login", "/register", "/home").permitAll()
+                    .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                     .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                     
-                    // Routes protégées
+                    // Routes protégées par rôle
+                    .requestMatchers("/api/admin/**").hasRole("SUPER_ADMIN")
+                    .requestMatchers("/api/organisation/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
+                    .requestMatchers("/api/user/**").hasRole("USER")
+                    
+                    // Autres routes
                     .anyRequest().authenticated();
                 logger.info("Authorization rules configured");
             })
@@ -71,33 +79,7 @@ public class SecurityConfig {
                 logger.info("Session management configured to STATELESS");
             })
             .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            .oauth2Login(oauth2 -> {
-                logger.info("Configuring OAuth2 login");
-                oauth2
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/", true)
-                    .failureUrl("/login?error=true")
-                    .authorizationEndpoint(authorization -> {
-                        authorization.baseUri("/oauth2/authorize");
-                    })
-                    .redirectionEndpoint(redirection -> {
-                        redirection.baseUri("/oauth2/callback/*");
-                    })
-                    .successHandler((request, response, authentication) -> {
-                        // Redirection selon le type d'utilisateur
-                        if (authentication.getAuthorities().stream()
-                                .anyMatch(a -> a.getAuthority().equals("ROLE_SUPER_ADMIN"))) {
-                            response.sendRedirect("/admin/validation");
-                        } else if (authentication.getAuthorities().stream()
-                                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-                            response.sendRedirect("/organisation/actions");
-                        } else {
-                            response.sendRedirect("/");
-                        }
-                    });
-                logger.info("OAuth2 login configured");
-            });
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         logger.info("Security filter chain configuration completed");
         return http.build();
@@ -130,6 +112,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance();
     }
 } 

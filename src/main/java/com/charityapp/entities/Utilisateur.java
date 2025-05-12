@@ -132,10 +132,6 @@ public class Utilisateur implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    public void setPassword(String password) {
-        this.motDePasse = password;
-    }
     
     public void setRoles(List<String> roles) {
         this.roles = roles;

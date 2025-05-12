@@ -90,8 +90,9 @@ public class AuthenticationController {
             return ResponseEntity.ok(responseBody);
         } catch (Exception e) {
             logger.error("Erreur lors de la connexion: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Erreur lors de la connexion: " + e.getMessage());
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Email ou mot de passe incorrect");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
     }
 } 

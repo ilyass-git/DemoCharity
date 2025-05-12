@@ -27,6 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         "/api/actions",
         "/api/categories",
         "/api/organisations",
+        "/api/organisations/validees",
         "/api/auth",
         "/api/test",
         "/",

@@ -325,7 +325,13 @@
                     nom: document.getElementById('nom').value,
                     email: document.getElementById('email').value,
                     password: document.getElementById('password').value,
-                    role: 'ADMIN'
+                    role: 'ADMIN',
+                    adresse: document.getElementById('adresse').value,
+                    ville: document.getElementById('ville').value,
+                    pays: document.getElementById('pays').value,
+                    codePostal: document.getElementById('codePostal').value,
+                    numeroTelephone: document.getElementById('telephone').value,
+                    langue: 'FR'
                 };
 
                 // Création de l'organisation
@@ -345,33 +351,46 @@
                 fetch('/api/auth/register', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify(userData)
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.token) {
-                        // Création de l'organisation avec l'ID de l'admin
-                        return fetch('/api/organisations', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${data.token}`
-                            },
-                            body: JSON.stringify(orgData)
-                        });
-                    } else {
-                        throw new Error('Erreur lors de la création de l\'utilisateur');
+                .then(async response => {
+                    const responseText = await response.text();
+                    let data;
+                    try {
+                        data = JSON.parse(responseText);
+                    } catch (e) {
+                        throw new Error(responseText || 'Erreur lors de la création de l\'utilisateur');
                     }
+                    if (!data.token) {
+                        throw new Error(data.message || 'Erreur lors de la création de l\'utilisateur');
+                    }
+                    return data;
                 })
-                .then(response => {
-                    if (response.ok) {
-                        alert('Inscription réussie ! Votre demande est en attente de validation.');
-                        window.location.href = '/login';
-                    } else {
-                        throw new Error('Erreur lors de la création de l\'organisation');
+                .then(data => {
+                    // Extraction de l'ID de l'admin depuis le token JWT
+                    const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
+                    const adminId = tokenPayload.sub; // L'ID de l'utilisateur est stocké dans le champ 'sub' du token
+
+                    // Création de l'organisation avec l'ID de l'admin
+                    return fetch(`/api/organisations?adminId=${adminId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${data.token}`
+                        },
+                        body: JSON.stringify(orgData)
+                    });
+                })
+                .then(async response => {
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(errorText || 'Erreur lors de la création de l\'organisation');
                     }
+                    alert('Inscription réussie ! Votre demande est en attente de validation.');
+                    window.location.href = '/login';
                 })
                 .catch(error => {
                     alert('Erreur lors de l\'inscription : ' + error.message);

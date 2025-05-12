@@ -380,7 +380,7 @@
             const categoriesContainer = document.getElementById('categories');
             categoriesContainer.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Chargement...</span></div></div>';
 
-            fetch('/api/categories/public')
+            fetch('/api/categories')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Erreur lors du chargement des catégories');
@@ -394,11 +394,15 @@
                     }
 
                     const categoriesHtml = categories.map(category => `
-                        <div class="col-md-3 mb-4">
+                        <div class="col-md-4 mb-4">
                             <div class="card h-100">
                                 <div class="card-body">
                                     <h5 class="card-title">${category.nom}</h5>
                                     <p class="card-text">${category.description}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="badge bg-primary">${category.nombreActions} actions</span>
+                                        <a href="/actions?categorie=${category.id}" class="btn btn-outline-primary">Voir les actions</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -416,7 +420,7 @@
             const organisationsContainer = document.getElementById('organisations');
             organisationsContainer.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Chargement...</span></div></div>';
 
-            fetch('/api/organisations/public')
+            fetch('/api/organisations/validees')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Erreur lors du chargement des organisations');
@@ -432,15 +436,16 @@
                     const organisationsHtml = organisations.map(org => `
                         <div class="col-md-4 mb-4">
                             <div class="card h-100">
+                                ${org.logoUrl ? `
+                                    <img src="${org.logoUrl}" class="card-img-top" alt="${org.nom}" style="height: 200px; object-fit: cover;">
+                                ` : ''}
                                 <div class="card-body">
                                     <h5 class="card-title">${org.nom}</h5>
-                                    <p class="card-text">${org.descriptionMission}</p>
-                                    <p class="card-text">
-                                        <small class="text-muted">
-                                            Contact: ${org.nomContactPrincipal}<br>
-                                            Email: ${org.emailContactPrincipal}
-                                        </small>
-                                    </p>
+                                    <p class="card-text">${org.description}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="badge bg-success">${org.actionsDeCharite ? org.actionsDeCharite.length : 0} actions</span>
+                                        <a href="/organisation/${org.id}" class="btn btn-outline-primary">Voir le profil</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
