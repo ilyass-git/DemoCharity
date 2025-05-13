@@ -112,13 +112,27 @@
 
         // Chargement des organisations
         function loadOrganisations() {
-            fetch('/api/organisations')
-                .then(response => response.json())
+            fetch('/api/organisations', {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur d\'authentification');
+                    }
+                    return response.json();
+                })
                 .then(organisations => {
                     currentOrganisations = organisations;
                     filterOrganisations();
                 })
-                .catch(error => console.error('Erreur lors du chargement des organisations:', error));
+                .catch(error => {
+                    console.error('Erreur lors du chargement des organisations:', error);
+                    if (error.message === 'Erreur d\'authentification') {
+                        window.location.href = '/login';
+                    }
+                });
         }
 
         // Filtrage des organisations
@@ -205,18 +219,21 @@
                 fetch(`/api/organisations/${orgId}/valider`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
                     }
                 })
                 .then(response => {
-                    if (response.ok) {
-                        loadOrganisations();
-                        bootstrap.Modal.getInstance(document.getElementById('orgDetailsModal')).hide();
-                    } else {
+                    if (!response.ok) {
                         throw new Error('Erreur lors de la validation');
                     }
+                    loadOrganisations();
+                    bootstrap.Modal.getInstance(document.getElementById('orgDetailsModal')).hide();
                 })
-                .catch(error => alert('Erreur: ' + error.message));
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Une erreur est survenue lors de la validation de l\'organisation');
+                });
             }
         }
 
@@ -226,26 +243,58 @@
                 fetch(`/api/organisations/${orgId}/rejeter`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
                     }
                 })
                 .then(response => {
-                    if (response.ok) {
-                        loadOrganisations();
-                        bootstrap.Modal.getInstance(document.getElementById('orgDetailsModal')).hide();
-                    } else {
+                    if (!response.ok) {
                         throw new Error('Erreur lors du rejet');
                     }
+                    loadOrganisations();
+                    bootstrap.Modal.getInstance(document.getElementById('orgDetailsModal')).hide();
                 })
-                .catch(error => alert('Erreur: ' + error.message));
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Une erreur est survenue lors du rejet de l\'organisation');
+                });
             }
         }
 
         // Événements
         document.addEventListener('DOMContentLoaded', function() {
-            loadOrganisations();
+            // Vérification de l'authentification
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
 
-            // Filtres
+            // Vérification du rôle SUPER_ADMIN
+            fetch('/api/user/current', {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Non autorisé');
+                }
+                return response.json();
+            })
+            .then(user => {
+                if (!user.roles.includes('ROLE_SUPER_ADMIN')) {
+                    window.location.href = '/';
+                } else {
+                    loadOrganisations();
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                window.location.href = '/login';
+            });
+
+            // Configuration des événements de filtrage
             document.querySelectorAll('[data-status]').forEach(button => {
                 button.addEventListener('click', function() {
                     document.querySelectorAll('[data-status]').forEach(btn => btn.classList.remove('active'));
@@ -255,7 +304,6 @@
                 });
             });
 
-            // Recherche
             document.getElementById('searchInput').addEventListener('input', filterOrganisations);
             document.getElementById('searchButton').addEventListener('click', filterOrganisations);
         });

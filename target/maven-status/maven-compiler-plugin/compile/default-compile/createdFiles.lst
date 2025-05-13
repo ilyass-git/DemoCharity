@@ -1,7 +1,9 @@
+com\charityapp\security\CustomUserDetailsService.class
 com\charityapp\security\JwtService.class
 com\charityapp\controllers\CategorieController.class
 com\charityapp\CharityBackendApplication.class
 com\charityapp\repositories\ActionDeChariteRepository.class
+com\charityapp\security\GoogleOAuth2Service.class
 com\charityapp\services\CategorieService.class
 com\charityapp\controllers\UtilisateurController.class
 com\charityapp\security\AuthenticationRequest.class
@@ -10,8 +12,10 @@ com\charityapp\dto\ActionChariteDTO$ActionChariteDTOBuilder.class
 com\charityapp\controllers\TestController.class
 com\charityapp\entities\Media.class
 com\charityapp\controllers\HomeController.class
+com\charityapp\security\JwtAuthenticationFilter.class
 com\charityapp\services\ICategorieService.class
 com\charityapp\services\UtilisateurService.class
+com\charityapp\security\SecurityConfig.class
 com\charityapp\services\DonService.class
 com\charityapp\repositories\OrganisationRepository.class
 com\charityapp\controllers\DonController.class
@@ -33,10 +37,14 @@ com\charityapp\security\AuthenticationRequest$AuthenticationRequestBuilder.class
 com\charityapp\services\ActionDeChariteService.class
 com\charityapp\controllers\ActionDeChariteController.class
 com\charityapp\entities\Utilisateur.class
+com\charityapp\security\GoogleOAuth2Service$CustomOAuth2User.class
+com\charityapp\security\AuthenticationService.class
 com\charityapp\security\AuthenticationResponse$AuthenticationResponseBuilder.class
 com\charityapp\controllers\OrganisationController.class
 com\charityapp\services\IUtilisateurService.class
 com\charityapp\services\IOrganisationService.class
+com\charityapp\controllers\LoginController.class
 com\charityapp\entities\ActionDeCharite.class
+com\charityapp\controllers\AuthenticationController.class
 com\charityapp\security\AuthenticationResponse.class
 com\charityapp\services\OrganisationService.class

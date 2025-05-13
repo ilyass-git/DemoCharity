@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Arrays;
 
@@ -52,34 +53,61 @@ public class SecurityConfig {
                 auth
                 // Routes publiques
                 .requestMatchers("/api/test").permitAll()
-                    .requestMatchers("/api/auth/**", "/register/**", "/login/**", "/register-type/**").permitAll()
-                    .requestMatchers("/organisation/register", "/donateur/register").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/register/**").permitAll()
+                .requestMatchers("/login/**").permitAll()
+                .requestMatchers("/register-type/**").permitAll()
+                .requestMatchers("/organisation/register").permitAll()
+                .requestMatchers("/donateur/register").permitAll()
                 .requestMatchers("/api/actions").permitAll()
                 .requestMatchers("/api/actions/public/**").permitAll()
                 .requestMatchers("/api/categories").permitAll()
                 .requestMatchers("/api/categories/public/**").permitAll()
                 .requestMatchers("/api/organisations").permitAll()
                 .requestMatchers("/api/organisations/public/**").permitAll()
-                    .requestMatchers("/api/organisations/validees").permitAll()
+                .requestMatchers("/api/organisations/validees").permitAll()
                 .requestMatchers("/", "/login", "/register", "/home").permitAll()
-                    .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-                    .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
-                    
-                    // Routes protégées par rôle
-                    .requestMatchers("/api/admin/**").hasRole("SUPER_ADMIN")
-                    .requestMatchers("/api/organisation/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
-                    .requestMatchers("/api/user/**").hasRole("USER")
-                    
-                    // Autres routes
-                    .anyRequest().authenticated();
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+                .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
+                
+                // Routes protégées par rôle
+                .requestMatchers("/admin/**").hasRole("SUPER_ADMIN")
+                .requestMatchers("/api/admin/**").hasRole("SUPER_ADMIN")
+                .requestMatchers("/api/organisation/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
+                .requestMatchers("/api/user/**").hasRole("USER")
+                .requestMatchers("/api/utilisateurs/me").authenticated()
+                
+                // Autres routes
+                .anyRequest().authenticated();
                 logger.info("Authorization rules configured");
+            })
+            .formLogin(form -> {
+                form
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/")
+                    .permitAll();
+                logger.info("Form login configured");
+            })
+            .logout(logout -> {
+                logout
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/login?logout")
+                    .permitAll();
+                logger.info("Logout configured");
             })
             .sessionManagement(session -> {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 logger.info("Session management configured to STATELESS");
             })
             .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(exception -> {
+                exception.authenticationEntryPoint((request, response, authException) -> {
+                    response.setContentType("application/json");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"" + authException.getMessage() + "\"}");
+                });
+            });
 
         logger.info("Security filter chain configuration completed");
         return http.build();

@@ -56,6 +56,9 @@ public class Utilisateur implements UserDetails {
     @Column(nullable = false)
     private boolean notificationsEmailActivees = true;
 
+    @Column
+    private String photo; // URL de la photo de profil
+
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreation;

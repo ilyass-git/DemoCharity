@@ -8,7 +8,7 @@ INSERT INTO categorie (nom, description) VALUES
 
 -- Insertion du super admin en premier
 INSERT INTO utilisateur (id, email, mot_de_passe, nom, prenom, numero_telephone, adresse, ville, pays, code_postal, langue, notifications_email_activees, date_creation, date_modification)
-VALUES (1, 'admin@hopeshare.com', '$2a$10$rDmFN6ZJvwFqMz1qkqkqUOqkqkqkqkqkqkqkqkqkqkqkqkqkqkqk', 'Admin', 'Super', '+33600000000', '123 Admin Street', 'Paris', 'France', '75000', 'fr', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+VALUES (1, 'admin@hopeshare.com', 'admin123', 'Admin', 'Super', '+33600000000', '123 Admin Street', 'Paris', 'France', '75000', 'fr', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Attribution du rôle ROLE_SUPER_ADMIN
 INSERT INTO utilisateur_roles (utilisateur_id, role) VALUES (1, 'ROLE_SUPER_ADMIN');

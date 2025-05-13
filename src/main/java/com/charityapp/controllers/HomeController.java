@@ -41,12 +41,6 @@ public class HomeController {
         }
     }
 
-    @GetMapping("/login")
-    public String login() {
-        logger.info("Accès à la page de connexion");
-        return "login";
-    }
-
     @GetMapping("/register")
     public String register() {
         logger.info("Redirection vers la page de sélection du type d'inscription");
