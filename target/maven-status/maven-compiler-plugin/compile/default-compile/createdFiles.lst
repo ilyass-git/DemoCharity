@@ -3,7 +3,6 @@ com\charityapp\security\JwtService.class
 com\charityapp\controllers\CategorieController.class
 com\charityapp\CharityBackendApplication.class
 com\charityapp\repositories\ActionDeChariteRepository.class
-com\charityapp\security\GoogleOAuth2Service.class
 com\charityapp\services\CategorieService.class
 com\charityapp\controllers\UtilisateurController.class
 com\charityapp\security\AuthenticationRequest.class
@@ -25,7 +24,6 @@ com\charityapp\dto\ActionChariteDTO.class
 com\charityapp\entities\Don.class
 com\charityapp\repositories\CategorieRepository.class
 com\charityapp\repositories\DonRepository.class
-com\charityapp\controllers\OAuth2Controller.class
 com\charityapp\entities\StatutOrganisation.class
 com\charityapp\controllers\OrganisationRegisterController.class
 com\charityapp\entities\Organisation.class
@@ -37,7 +35,6 @@ com\charityapp\security\AuthenticationRequest$AuthenticationRequestBuilder.class
 com\charityapp\services\ActionDeChariteService.class
 com\charityapp\controllers\ActionDeChariteController.class
 com\charityapp\entities\Utilisateur.class
-com\charityapp\security\GoogleOAuth2Service$CustomOAuth2User.class
 com\charityapp\security\AuthenticationService.class
 com\charityapp\security\AuthenticationResponse$AuthenticationResponseBuilder.class
 com\charityapp\controllers\OrganisationController.class

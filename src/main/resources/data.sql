@@ -10,26 +10,26 @@ INSERT INTO categorie (nom, description) VALUES
 INSERT INTO utilisateur (id, email, mot_de_passe, nom, prenom, numero_telephone, adresse, ville, pays, code_postal, langue, notifications_email_activees, date_creation, date_modification)
 VALUES (1, 'admin@hopeshare.com', 'admin123', 'Admin', 'Super', '+33600000000', '123 Admin Street', 'Paris', 'France', '75000', 'fr', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
--- Attribution du rôle ROLE_SUPER_ADMIN
+-- Attribution du rôle ROLE_SUPER_ADMIN à l'admin
 INSERT INTO utilisateur_roles (utilisateur_id, role) VALUES (1, 'ROLE_SUPER_ADMIN');
 
 -- Insertion des autres utilisateurs (mot de passe: password123)
 INSERT INTO utilisateur (prenom, nom, email, mot_de_passe, numero_telephone, adresse, ville, pays, code_postal, langue, notifications_email_activees, date_creation, date_modification) VALUES 
-('Jean', 'Dupont', 'jean.dupont@email.com', '$2a$10$rDmFN6ZJvwFqMz1qkqkqUOqkqkqkqkqkqkqkqkqkqkqkqkqkqkqk', '+33123456789', '123 Rue de Paris', 'Paris', 'France', '75001', 'FR', true, NOW(), NOW()),
-('Marie', 'Martin', 'marie.martin@email.com', '$2a$10$rDmFN6ZJvwFqMz1qkqkqUOqkqkqkqkqkqkqkqkqkqkqkqkqkqkqk', '+33123456790', '456 Avenue des Champs-Élysées', 'Paris', 'France', '75008', 'FR', true, NOW(), NOW()),
-('Ahmed', 'Benali', 'ahmed.benali@email.com', '$2a$10$rDmFN6ZJvwFqMz1qkqkqUOqkqkqkqkqkqkqkqkqkqkqkqkqkqkqk', '+212123456789', '789 Boulevard Mohammed V', 'Casablanca', 'Maroc', '20000', 'AR', true, NOW(), NOW());
+('Jean', 'Dupont', 'jean.dupont@email.com', 'password123', '+33123456789', '123 Rue de Paris', 'Paris', 'France', '75001', 'FR', true, NOW(), NOW()),
+('Marie', 'Martin', 'marie.martin@email.com', 'password123', '+33123456790', '456 Avenue des Champs-Élysées', 'Paris', 'France', '75008', 'FR', true, NOW(), NOW()),
+('Ahmed', 'Benali', 'ahmed.benali@email.com', 'password123', '+212123456789', '789 Boulevard Mohammed V', 'Casablanca', 'Maroc', '20000', 'AR', true, NOW(), NOW());
 
--- Insertion des rôles utilisateurs
+-- Attribution du rôle ROLE_USER à tous les autres utilisateurs
 INSERT INTO utilisateur_roles (utilisateur_id, role) VALUES
 (2, 'ROLE_USER'),
 (3, 'ROLE_USER'),
 (4, 'ROLE_USER');
 
 -- Insertion des organisations
-INSERT INTO organisation (nom, adresse_legale, numero_identification_fiscale, nom_contact_principal, email_contact_principal, telephone_contact_principal, url_logo, description_mission, est_approuvee, date_creation, date_modification, admin_id) VALUES 
-('Fondation Éducation Pour Tous', '10 Rue de l''Éducation, Paris', 'FR12345678901', 'Sophie Bernard', 'sophie.bernard@education.org', '0123456789', 'https://example.com/logo1.png', 'Promouvoir l''éducation pour tous les enfants', true, NOW(), NOW(), 2),
-('Association Santé Sans Frontières', '20 Avenue de la Santé, Lyon', 'FR98765432109', 'Pierre Dubois', 'pierre.dubois@sante.org', '0987654321', 'https://example.com/logo2.png', 'Améliorer l''accès aux soins de santé dans les pays en développement', true, NOW(), NOW(), 3),
-('ONG Environnement Durable', '30 Boulevard de l''Environnement, Marseille', 'FR45678912305', 'Leila Benali', 'leila.benali@environnement.org', '0555555555', 'https://example.com/logo3.png', 'Protéger l''environnement et promouvoir le développement durable', false, NOW(), NOW(), 4);
+INSERT INTO organisation (nom, adresse, ville, pays, code_postal, email, telephone, description, logo_url, statut, admin_id) VALUES 
+('Fondation Éducation Pour Tous', '10 Rue de l''Éducation', 'Paris', 'France', '75001', 'sophie.bernard@education.org', '0123456789', 'Promouvoir l''éducation pour tous les enfants', 'https://example.com/logo1.png', 'EN_ATTENTE', 2),
+('Association Santé Sans Frontières', '20 Avenue de la Santé', 'Lyon', 'France', '69000', 'pierre.dubois@sante.org', '0987654321', 'Améliorer l''accès aux soins de santé dans les pays en développement', 'https://example.com/logo2.png', 'EN_ATTENTE', 3),
+('ONG Environnement Durable', '30 Boulevard de l''Environnement', 'Marseille', 'France', '13000', 'leila.benali@environnement.org', '0555555555', 'Protéger l''environnement et promouvoir le développement durable', 'https://example.com/logo3.png', 'EN_ATTENTE', 4);
 
 -- Insertion des actions de charité
 INSERT INTO action_de_charite (titre, description, date_debut, date_fin, lieu, objectif_collecte, montant_actuel, est_archivee, date_creation, date_modification, organisation_id, categorie_id) VALUES 

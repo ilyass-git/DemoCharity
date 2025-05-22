@@ -8,16 +8,22 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.HashSet;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "utilisateur")
 public class Utilisateur implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,40 +38,33 @@ public class Utilisateur implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "mot_de_passe", nullable = false)
     private String motDePasse;
 
-    @Column(nullable = false)
+    @Column(name = "numero_telephone")
     private String numeroTelephone;
 
-    @Column(nullable = false)
     private String adresse;
-
-    @Column(nullable = false)
     private String ville;
-
-    @Column(nullable = false)
     private String pays;
-
-    @Column(nullable = false)
     private String codePostal;
 
     @Column(nullable = false)
-    private String langue; // FR ou AR pour le multilinguisme
+    private String langue = "fr";
 
-    @Column(nullable = false)
+    @Column(name = "notifications_email_activees")
     private boolean notificationsEmailActivees = true;
 
     @Column
     private String photo; // URL de la photo de profil
 
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateCreation;
+    @CreationTimestamp
+    @Column(name = "date_creation", nullable = false, updatable = false)
+    private LocalDateTime dateCreation;
 
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateModification;
+    @UpdateTimestamp
+    @Column(name = "date_modification")
+    private LocalDateTime dateModification;
 
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -86,17 +85,17 @@ public class Utilisateur implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "utilisateur_roles", joinColumns = @JoinColumn(name = "utilisateur_id"))
     @Column(name = "role")
-    private List<String> roles;
+    private Set<String> roles = new HashSet<>();
 
     @PrePersist
     protected void onCreate() {
-        dateCreation = new Date();
-        dateModification = new Date();
+        dateCreation = LocalDateTime.now();
+        dateModification = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        dateModification = new Date();
+        dateModification = LocalDateTime.now();
     }
 
     @Override
@@ -136,11 +135,32 @@ public class Utilisateur implements UserDetails {
         return true;
     }
     
-    public void setRoles(List<String> roles) {
+    public void setRoles(Set<String> roles) {
         this.roles = roles;
     }
     
     public void setMotDePasse(String motDePasse) {
         this.motDePasse = motDePasse;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void addRole(String role) {
+        if (this.roles == null) {
+            this.roles = new HashSet<>();
+        }
+        this.roles.add(role);
+    }
+
+    public void removeRole(String role) {
+        if (this.roles != null) {
+            this.roles.remove(role);
+        }
+    }
+
+    public boolean hasRole(String role) {
+        return this.roles != null && this.roles.contains(role);
     }
 } 

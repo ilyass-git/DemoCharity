@@ -20,4 +20,5 @@ public class RegisterRequest {
     private String pays;
     private String codePostal;
     private String langue;
+    private String role;
 } 

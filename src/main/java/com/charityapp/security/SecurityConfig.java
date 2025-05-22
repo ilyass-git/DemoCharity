@@ -50,9 +50,13 @@ public class SecurityConfig {
             })
             .authorizeHttpRequests(auth -> {
                 logger.info("Configuring authorization rules");
-                // Permettre l'accès à toutes les routes
-                auth.anyRequest().permitAll();
-                logger.info("All routes are now public");
+                auth
+                    .requestMatchers("/api/auth/**", "/api/organisations/register", "/api/organisations/validees", 
+                                   "/api/actions", "/api/categories", "/", "/login", "/register", 
+                                   "/register-type", "/organisation/register", "/donateur/register", 
+                                   "/home", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+                    .anyRequest().authenticated();
+                logger.info("Authorization rules configured");
             })
             .formLogin(form -> {
                 form
@@ -101,19 +105,23 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
+        logger.info("Configuring authentication provider");
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
+        logger.info("Authentication provider configured with NoOpPasswordEncoder");
         return authProvider;
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        logger.info("Configuring authentication manager");
         return config.getAuthenticationManager();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        logger.info("Using NoOpPasswordEncoder for password encoding");
         return NoOpPasswordEncoder.getInstance();
     }
 } 

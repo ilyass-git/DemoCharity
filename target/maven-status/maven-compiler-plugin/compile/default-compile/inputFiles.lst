@@ -1,4 +1,3 @@
-C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\controllers\OAuth2Controller.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\controllers\DonController.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\controllers\RegisterTypeController.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\security\CustomUserDetailsService.java
@@ -37,7 +36,6 @@ C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\CharityBackendApplication.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\controllers\UtilisateurController.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\controllers\OrganisationController.java
-C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\security\GoogleOAuth2Service.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\services\UtilisateurService.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\controllers\LoginController.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\repositories\OrganisationRepository.java
