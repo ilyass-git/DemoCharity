@@ -51,12 +51,36 @@ public class OrganisationService implements IOrganisationService {
 
     @Transactional
     public Organisation creerOrganisation(Organisation organisation, Long adminId) {
-        Utilisateur admin = utilisateurRepository.findById(adminId)
-            .orElseThrow(() -> new RuntimeException("Admin non trouvé"));
+        logger.info("Début de la création de l'organisation: {}", organisation.getNom());
+        logger.info("Admin ID: {}", adminId);
         
-        organisation.setAdmin(admin);
-        organisation.setStatut(StatutOrganisation.EN_ATTENTE);
-        return organisationRepository.save(organisation);
+        try {
+            // Vérification de l'existence de l'admin
+            Utilisateur admin = utilisateurRepository.findById(adminId)
+                .orElseThrow(() -> {
+                    logger.error("Admin non trouvé avec l'ID: {}", adminId);
+                    return new RuntimeException("Admin non trouvé");
+                });
+            
+            // Vérification de l'unicité de l'email
+            if (organisationRepository.findByEmail(organisation.getEmail()).isPresent()) {
+                logger.error("Email déjà utilisé: {}", organisation.getEmail());
+                throw new RuntimeException("Cet email est déjà utilisé par une autre organisation");
+            }
+            
+            // Configuration de l'organisation
+            organisation.setAdmin(admin);
+            organisation.setStatut(StatutOrganisation.EN_ATTENTE);
+            
+            // Sauvegarde de l'organisation
+            Organisation savedOrganisation = organisationRepository.save(organisation);
+            logger.info("Organisation créée avec succès: {}", savedOrganisation.getNom());
+            
+            return savedOrganisation;
+        } catch (Exception e) {
+            logger.error("Erreur lors de la création de l'organisation: {}", e.getMessage(), e);
+            throw new RuntimeException("Erreur lors de la création de l'organisation: " + e.getMessage());
+        }
     }
 
     @Transactional
@@ -68,8 +92,6 @@ public class OrganisationService implements IOrganisationService {
             .orElseThrow(() -> new RuntimeException("Validateur non trouvé"));
         
         organisation.setStatut(StatutOrganisation.VALIDEE);
-        organisation.setValidateur(validateur);
-        organisation.setDateValidation(new Date());
         
         return organisationRepository.save(organisation);
     }
@@ -83,8 +105,6 @@ public class OrganisationService implements IOrganisationService {
             .orElseThrow(() -> new RuntimeException("Validateur non trouvé"));
         
         organisation.setStatut(StatutOrganisation.REJETEE);
-        organisation.setValidateur(validateur);
-        organisation.setDateValidation(new Date());
         
         return organisationRepository.save(organisation);
     }

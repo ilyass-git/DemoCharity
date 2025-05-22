@@ -1,20 +1,12 @@
 package com.charityapp.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name = "organisation")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Organisation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +14,6 @@ public class Organisation {
 
     @Column(nullable = false)
     private String nom;
-
-    @Column(nullable = false, unique = true)
-    private String nif; // Numéro d'identification fiscale
 
     @Column(nullable = false)
     private String adresse;
@@ -35,7 +24,7 @@ public class Organisation {
     @Column(nullable = false)
     private String pays;
 
-    @Column(nullable = false)
+    @Column(name = "code_postal", nullable = false)
     private String codePostal;
 
     @Column(nullable = false)
@@ -44,10 +33,10 @@ public class Organisation {
     @Column(nullable = false)
     private String telephone;
 
-    @Column(length = 1000)
+    @Column
     private String description;
 
-    @Column
+    @Column(name = "logo_url")
     private String logoUrl;
 
     @Column(nullable = false)
@@ -59,21 +48,5 @@ public class Organisation {
     private Utilisateur admin;
 
     @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<ActionDeCharite> actionsDeCharite;
-
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateCreation;
-
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateModification;
-
-    @ManyToOne
-    @JoinColumn(name = "validateur_id")
-    private Utilisateur validateur;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateValidation;
 } 

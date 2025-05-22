@@ -1,5 +1,6 @@
 package com.charityapp.security;
 
+import com.charityapp.entities.Utilisateur;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -58,7 +59,12 @@ public class JwtService {
 
     public String generateToken(UserDetails userDetails) {
         logger.info("Generating token for user: {}", userDetails.getUsername());
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> claims = new HashMap<>();
+        if (userDetails instanceof Utilisateur) {
+            claims.put("userId", ((Utilisateur) userDetails).getId());
+            logger.info("Added user ID to token claims: {}", ((Utilisateur) userDetails).getId());
+        }
+        return generateToken(claims, userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
@@ -119,6 +125,18 @@ public class JwtService {
         } catch (Exception e) {
             logger.error("Error extracting all claims: {}", e.getMessage(), e);
             throw e;
+        }
+    }
+
+    public Long extractUserId(String token) {
+        try {
+            Claims claims = extractAllClaims(token);
+            Long userId = claims.get("userId", Long.class);
+            logger.info("Extracted user ID from token: {}", userId);
+            return userId;
+        } catch (Exception e) {
+            logger.error("Error extracting user ID from token: {}", e.getMessage(), e);
+            return null;
         }
     }
 } 

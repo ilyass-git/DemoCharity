@@ -27,19 +27,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     
     // Liste des endpoints publics qui ne nécessitent pas d'authentification
     private final List<String> publicEndpoints = Arrays.asList(
+        "/api/auth",
+        "/api/organisations/register",
+        "/api/organisations/validees",
         "/api/actions",
         "/api/categories",
-        "/api/organisations",
-        "/api/organisations/validees",
-        "/api/auth",
-        "/api/test",
         "/",
         "/login",
         "/register",
+        "/register-type",
+        "/organisation/register",
+        "/donateur/register",
         "/home",
         "/css/",
         "/js/",
-        "/images/"
+        "/images/",
+        "/oauth2/",
+        "/login/oauth2/"
     );
 
     public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
@@ -53,65 +57,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        // Vérifier si l'URL est un endpoint public
         String requestURI = request.getRequestURI();
-        logger.info("Processing request for URI: {}", requestURI);
+        String method = request.getMethod();
+        logger.info("Processing {} request for URI: {}", method, requestURI);
         
-        if (isPublicEndpoint(requestURI)) {
-            logger.info("Public endpoint, skipping authentication");
-            filterChain.doFilter(request, response);
-            return;
-        }
-        
-        final String authHeader = request.getHeader("Authorization");
-        logger.info("Auth header: {}", authHeader);
-        
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            logger.warn("No valid auth header found");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Missing or invalid token\"}");
-            return;
-        }
-
-        try {
-            final String jwt = authHeader.substring(7);
-            logger.info("Extracted JWT token: {}", jwt);
-            
-            final String userEmail = jwtService.extractUsername(jwt);
-            logger.info("Extracted email from token: {}", userEmail);
-
-            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-                logger.info("Loaded user details: {}", userDetails);
-                
-                if (jwtService.isTokenValid(jwt, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                    logger.info("Authentication set in SecurityContext for user: {}", userEmail);
-                } else {
-                    logger.warn("Token is not valid for user: {}", userEmail);
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.setContentType("application/json");
-                    response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Invalid token\"}");
-                    return;
-                }
-            }
-            filterChain.doFilter(request, response);
-        } catch (Exception e) {
-            logger.error("Error processing JWT: {}", e.getMessage(), e);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"" + e.getMessage() + "\"}");
-        }
+        // Laisser passer toutes les requêtes sans vérification
+        filterChain.doFilter(request, response);
     }
     
     private boolean isPublicEndpoint(String requestURI) {
-        return publicEndpoints.stream().anyMatch(endpoint -> requestURI.startsWith(endpoint));
+        boolean isPublic = publicEndpoints.stream().anyMatch(endpoint -> requestURI.startsWith(endpoint));
+        logger.info("Checking if endpoint is public: {} - Result: {}", requestURI, isPublic);
+        return isPublic;
     }
 } 

@@ -173,7 +173,7 @@
                 <p class="text-muted">Créez votre compte organisation et commencez à faire la différence</p>
             </div>
             
-            <form th:action="@{/api/auth/register}" method="POST" id="organisationForm">
+            <form id="organisationForm">
                 <!-- Informations de l'administrateur -->
                 <div class="form-section">
                     <h3><i class="fas fa-user-shield me-2"></i>Informations de l'administrateur</h3>
@@ -207,11 +207,6 @@
                         <div class="col-md-6 mb-3">
                             <label for="orgNom" class="form-label required-field">Nom de l'organisation</label>
                             <input type="text" class="form-control" id="orgNom" name="orgNom" required>
-                        </div>
-                        
-                        <div class="col-md-6 mb-3">
-                            <label for="nif" class="form-label required-field">NIF</label>
-                            <input type="text" class="form-control" id="nif" name="nif" required>
                         </div>
 
                         <!-- Adresse -->
@@ -337,14 +332,14 @@
                 // Création de l'organisation
                 const orgData = {
                     nom: document.getElementById('orgNom').value,
-                    nif: document.getElementById('nif').value,
                     adresse: document.getElementById('adresse').value,
                     ville: document.getElementById('ville').value,
                     pays: document.getElementById('pays').value,
                     codePostal: document.getElementById('codePostal').value,
                     email: document.getElementById('orgEmail').value,
                     telephone: document.getElementById('telephone').value,
-                    description: document.getElementById('description').value
+                    description: document.getElementById('description').value,
+                    logoUrl: null // Le logo sera géré séparément
                 };
 
                 // Envoi des données
@@ -357,42 +352,67 @@
                     body: JSON.stringify(userData)
                 })
                 .then(async response => {
+                    console.log('Register response status:', response.status);
                     const responseText = await response.text();
+                    console.log('Register response text:', responseText);
+                    
+                    if (!response.ok) {
+                        throw new Error(`Erreur lors de la création de l'utilisateur: ${responseText}`);
+                    }
+                    
                     let data;
                     try {
                         data = JSON.parse(responseText);
+                        console.log('Parsed response data:', data);
                     } catch (e) {
-                        throw new Error(responseText || 'Erreur lors de la création de l\'utilisateur');
+                        console.error('Error parsing response:', e);
+                        throw new Error('Réponse invalide du serveur');
                     }
+                    
                     if (!data.token) {
-                        throw new Error(data.message || 'Erreur lors de la création de l\'utilisateur');
+                        console.error('No token in response:', data);
+                        throw new Error('Token non reçu lors de l\'inscription');
                     }
-                    return data;
-                })
-                .then(data => {
-                    // Extraction de l'ID de l'admin depuis le token JWT
-                    const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
-                    const adminId = tokenPayload.sub; // L'ID de l'utilisateur est stocké dans le champ 'sub' du token
+
+                    if (!data.id) {
+                        console.error('No user ID in response:', data);
+                        throw new Error('ID utilisateur non reçu lors de l\'inscription');
+                    }
 
                     // Création de l'organisation avec l'ID de l'admin
-                    return fetch(`/api/organisations?adminId=${adminId}`, {
+                    const adminId = parseInt(data.id);
+                    
+                    return fetch(`/api/organisations/register?adminId=${adminId}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
+                            'Accept': 'application/json',
                             'Authorization': `Bearer ${data.token}`
                         },
                         body: JSON.stringify(orgData)
                     });
                 })
                 .then(async response => {
+                    console.log('Organisation creation response status:', response.status);
+                    const responseText = await response.text();
+                    console.log('Organisation creation response:', responseText);
+                    
                     if (!response.ok) {
-                        const errorText = await response.text();
-                        throw new Error(errorText || 'Erreur lors de la création de l\'organisation');
+                        throw new Error(responseText || 'Erreur lors de la création de l\'organisation');
                     }
-                    alert('Inscription réussie ! Votre demande est en attente de validation.');
-                    window.location.href = '/login';
+                    
+                    try {
+                        const responseData = JSON.parse(responseText);
+                        console.log('Organisation created successfully:', responseData);
+                        alert('Inscription réussie ! Votre demande est en attente de validation.');
+                        window.location.href = '/login';
+                    } catch (e) {
+                        console.error('Error parsing organisation response:', e);
+                        throw new Error('Réponse invalide du serveur lors de la création de l\'organisation');
+                    }
                 })
                 .catch(error => {
+                    console.error('Error during registration:', error);
                     alert('Erreur lors de l\'inscription : ' + error.message);
                 });
             }

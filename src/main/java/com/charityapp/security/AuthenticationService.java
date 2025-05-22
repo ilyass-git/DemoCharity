@@ -34,6 +34,8 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
         logger.info("Début de l'inscription pour l'email: {}", request.getEmail());
+        logger.info("Données de la requête: prenom={}, nom={}, email={}", 
+            request.getPrenom(), request.getNom(), request.getEmail());
         
         // Vérifier si l'utilisateur existe déjà
         if (utilisateurRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -56,16 +58,22 @@ public class AuthenticationService {
         
         // Ajouter un rôle par défaut
         user.setRoles(Arrays.asList("ROLE_USER"));
+        logger.info("Rôles définis pour l'utilisateur: {}", user.getRoles());
         
         logger.info("Sauvegarde de l'utilisateur: {}", user.getEmail());
-        utilisateurRepository.save(user);
+        user = utilisateurRepository.save(user); // Sauvegarder et récupérer l'utilisateur avec son ID
+        logger.info("Utilisateur sauvegardé avec l'ID: {}", user.getId());
         
         var jwtToken = jwtService.generateToken(user);
         logger.info("Token JWT généré pour l'utilisateur: {}", user.getEmail());
         
-        return AuthenticationResponse.builder()
+        AuthenticationResponse response = AuthenticationResponse.builder()
                 .token(jwtToken)
+                .id(user.getId())
                 .build();
+        logger.info("Réponse d'authentification créée avec token et ID: {}", user.getId());
+        
+        return response;
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {

@@ -5,6 +5,7 @@ import com.charityapp.services.OrganisationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,42 @@ public class OrganisationController {
         }
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<?> registerOrganisation(
+            @RequestBody Organisation organisation,
+            @RequestParam Long adminId) {
+        try {
+            logger.info("Tentative d'inscription d'une nouvelle organisation: {}", organisation.getNom());
+            logger.info("Admin ID: {}", adminId);
+            logger.info("Données de l'organisation: {}", organisation);
+            
+            if (organisation.getNom() == null || organisation.getNom().trim().isEmpty()) {
+                logger.error("Le nom de l'organisation est requis");
+                return ResponseEntity.badRequest().body("Le nom de l'organisation est requis");
+            }
+            
+            if (organisation.getEmail() == null || organisation.getEmail().trim().isEmpty()) {
+                logger.error("L'email de l'organisation est requis");
+                return ResponseEntity.badRequest().body("L'email de l'organisation est requis");
+            }
+            
+            if (organisation.getTelephone() == null || organisation.getTelephone().trim().isEmpty()) {
+                logger.error("Le téléphone de l'organisation est requis");
+                return ResponseEntity.badRequest().body("Le téléphone de l'organisation est requis");
+            }
+            
+            Organisation savedOrganisation = organisationService.creerOrganisation(organisation, adminId);
+            logger.info("Organisation créée avec succès: {}", savedOrganisation.getNom());
+            return ResponseEntity.ok(savedOrganisation);
+        } catch (Exception e) {
+            logger.error("Erreur lors de la création de l'organisation: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de la création de l'organisation: " + e.getMessage());
+        }
+    }
+
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     public ResponseEntity<Organisation> creerOrganisation(
             @RequestBody Organisation organisation,
             @RequestParam Long adminId) {

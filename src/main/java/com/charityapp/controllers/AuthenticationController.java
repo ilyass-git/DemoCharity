@@ -55,6 +55,7 @@ public class AuthenticationController {
             
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("token", response.getToken());
+            responseBody.put("id", response.getId());
             responseBody.put("message", "Inscription réussie");
             
             return ResponseEntity.ok(responseBody);

@@ -50,36 +50,9 @@ public class SecurityConfig {
             })
             .authorizeHttpRequests(auth -> {
                 logger.info("Configuring authorization rules");
-                auth
-                // Routes publiques
-                .requestMatchers("/api/test").permitAll()
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/register/**").permitAll()
-                .requestMatchers("/login/**").permitAll()
-                .requestMatchers("/register-type/**").permitAll()
-                .requestMatchers("/organisation/register").permitAll()
-                .requestMatchers("/donateur/register").permitAll()
-                .requestMatchers("/api/actions").permitAll()
-                .requestMatchers("/api/actions/public/**").permitAll()
-                .requestMatchers("/api/categories").permitAll()
-                .requestMatchers("/api/categories/public/**").permitAll()
-                .requestMatchers("/api/organisations").permitAll()
-                .requestMatchers("/api/organisations/public/**").permitAll()
-                .requestMatchers("/api/organisations/validees").permitAll()
-                .requestMatchers("/", "/login", "/register", "/home").permitAll()
-                .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-                .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
-                
-                // Routes protégées par rôle
-                .requestMatchers("/admin/**").hasRole("SUPER_ADMIN")
-                .requestMatchers("/api/admin/**").hasRole("SUPER_ADMIN")
-                .requestMatchers("/api/organisation/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
-                .requestMatchers("/api/user/**").hasRole("USER")
-                .requestMatchers("/api/utilisateurs/me").authenticated()
-                
-                // Autres routes
-                .anyRequest().authenticated();
-                logger.info("Authorization rules configured");
+                // Permettre l'accès à toutes les routes
+                auth.anyRequest().permitAll();
+                logger.info("All routes are now public");
             })
             .formLogin(form -> {
                 form
@@ -103,6 +76,7 @@ public class SecurityConfig {
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling(exception -> {
                 exception.authenticationEntryPoint((request, response, authException) -> {
+                    logger.error("Authentication error: {}", authException.getMessage());
                     response.setContentType("application/json");
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"" + authException.getMessage() + "\"}");

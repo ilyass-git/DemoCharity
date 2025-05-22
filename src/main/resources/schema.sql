@@ -30,24 +30,24 @@ CREATE TABLE IF NOT EXISTS utilisateur (
     langue VARCHAR(10) NOT NULL,
     notifications_email_activees BOOLEAN NOT NULL DEFAULT TRUE,
     date_creation DATETIME NOT NULL,
-    date_modification DATETIME NOT NULL
+    date_modification DATETIME NOT NULL,
+    photo VARCHAR(255)
 );
 
 -- Création de la table organisation
 CREATE TABLE IF NOT EXISTS organisation (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
-    adresse_legale VARCHAR(255) NOT NULL,
-    numero_identification_fiscale VARCHAR(50) NOT NULL UNIQUE,
-    nom_contact_principal VARCHAR(255) NOT NULL,
-    email_contact_principal VARCHAR(255) NOT NULL,
-    telephone_contact_principal VARCHAR(20) NOT NULL,
-    url_logo VARCHAR(255) NOT NULL,
-    description_mission VARCHAR(1000) NOT NULL,
-    est_approuvee BOOLEAN NOT NULL DEFAULT FALSE,
-    date_creation DATETIME NOT NULL,
-    date_modification DATETIME NOT NULL,
-    admin_id BIGINT,
+    adresse VARCHAR(255) NOT NULL,
+    ville VARCHAR(255) NOT NULL,
+    pays VARCHAR(255) NOT NULL,
+    code_postal VARCHAR(20) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    telephone VARCHAR(20) NOT NULL,
+    description VARCHAR(1000),
+    logo_url VARCHAR(255),
+    statut VARCHAR(20) NOT NULL DEFAULT 'EN_ATTENTE',
+    admin_id BIGINT NOT NULL,
     FOREIGN KEY (admin_id) REFERENCES utilisateur(id)
 );
 
