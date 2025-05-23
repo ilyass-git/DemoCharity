@@ -344,7 +344,8 @@
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <i class="fas fa-heart me-2"></i>HopeShare
+                <i class="fas fa-heart me-2"></i>
+                <span th:text="#{navbar.brand}">HopeShare</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -352,16 +353,37 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/"><i class="fas fa-home me-1"></i>Accueil</a>
+                        <a class="nav-link active" href="/">
+                            <i class="fas fa-home me-1"></i>
+                            <span th:text="#{navbar.home}">Accueil</span>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/login" id="loginButton"><i class="fas fa-sign-in-alt me-1"></i>Connexion</a>
+                        <a class="nav-link" href="/login" id="loginButton">
+                            <i class="fas fa-sign-in-alt me-1"></i>
+                            <span th:text="#{navbar.login}">Connexion</span>
+                        </a>
                     </li>
                     <li class="nav-item d-none" id="logoutButton">
-                        <a class="nav-link" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-1"></i>Déconnexion</a>
+                        <a class="nav-link" href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt me-1"></i>
+                            <span th:text="#{navbar.logout}">Déconnexion</span>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/register"><i class="fas fa-user-plus me-1"></i>Inscription</a>
+                        <a class="nav-link" href="/register">
+                            <i class="fas fa-user-plus me-1"></i>
+                            <span th:text="#{navbar.register}">Inscription</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🌐 <span th:text="${#locale=='en' ? 'English' : 'Français'}">Langue</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="langDropdown">
+                            <li><a class="dropdown-item" href="?lang=fr">Français</a></li>
+                            <li><a class="dropdown-item" href="?lang=en">English</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -371,10 +393,11 @@
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
-            <h1 class="fade-in">Bienvenue sur HopeShare</h1>
-            <p class="fade-in">Une plateforme dédiée à la promotion et au soutien des actions de charité. Ensemble, nous pouvons faire la différence.</p>
+            <h1 class="fade-in" th:text="#{hero.title}"></h1>
+            <p class="fade-in" th:text="#{hero.subtitle}"></p>
             <a href="#actions" class="btn btn-primary btn-lg fade-in">
-                <i class="fas fa-hands-helping me-2"></i>Découvrir les actions
+                <i class="fas fa-hands-helping me-2"></i>
+                <span th:text="#{hero.button}">Découvrir les actions</span>
             </a>
         </div>
     </section>
@@ -383,8 +406,8 @@
     <div class="container">
         <!-- Actions de charité -->
         <section class="main-section mb-5" id="actions">
-            <div class="section-title">Actions de charité</div>
-            <div class="section-desc">Découvrez et soutenez nos actions de charité en cours</div>
+            <div class="section-title" th:text="#{section.actions.title}">Actions de charité</div>
+            <div class="section-desc" th:text="#{section.actions.desc}">Découvrez et soutenez nos actions de charité en cours</div>
             <div class="section-container">
                 <div class="section-row" id="charityActions">
                     <!-- Les actions seront chargées dynamiquement ici -->
@@ -394,8 +417,8 @@
 
         <!-- Catégories -->
         <section class="main-section mb-5" id="categories-section">
-            <div class="section-title">Catégories</div>
-            <div class="section-desc">Explorez nos différentes catégories d'actions de charité</div>
+            <div class="section-title" th:text="#{section.categories.title}">Catégories</div>
+            <div class="section-desc" th:text="#{section.categories.desc}">Explorez nos différentes catégories d'actions de charité</div>
             <div class="section-container">
                 <div id="categories"><!-- Les catégories seront chargées dynamiquement ici --></div>
             </div>
@@ -403,8 +426,8 @@
 
         <!-- Organisations -->
         <section class="main-section mb-5" id="organisations-section">
-            <div class="section-title">Organisations</div>
-            <div class="section-desc">Découvrez les organisations caritatives partenaires</div>
+            <div class="section-title" th:text="#{section.orgs.title}">Organisations</div>
+            <div class="section-desc" th:text="#{section.orgs.desc}">Découvrez les organisations caritatives partenaires</div>
             <div class="section-container">
                 <div class="section-row" id="organisations">
                     <!-- Les organisations seront chargées dynamiquement ici -->

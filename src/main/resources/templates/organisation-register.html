@@ -146,7 +146,8 @@
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <i class="fas fa-heart me-2"></i>HopeShare
+                <i class="fas fa-heart me-2"></i>
+                <span th:text="#{navbar.brand}">HopeShare</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -154,10 +155,25 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Accueil</a>
+                        <a class="nav-link" href="/login">
+                            <i class="fas fa-sign-in-alt me-1"></i>
+                            <span th:text="#{navbar.login}">Connexion</span>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt me-1"></i>Connexion</a>
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-home me-1"></i>
+                            <span th:text="#{navbar.home}">Accueil</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🌐 <span th:text="${#locale=='en' ? 'English' : 'Français'}">Langue</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="langDropdown">
+                            <li><a class="dropdown-item" href="?lang=fr">Français</a></li>
+                            <li><a class="dropdown-item" href="?lang=en">English</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -169,32 +185,32 @@
         <div class="register-container fade-in">
             <div class="register-header">
                 <i class="fas fa-building"></i>
-                <h2>Inscription Organisation</h2>
-                <p class="text-muted">Créez votre compte organisation et commencez à faire la différence</p>
+                <h2 th:text="#{org.register.title}">Inscription Organisation</h2>
+                <p class="text-muted" th:text="#{org.register.subtitle}">Créez votre compte organisation et commencez à faire la différence</p>
             </div>
             
             <form id="organisationForm">
                 <!-- Informations de l'administrateur -->
                 <div class="form-section">
-                    <h3><i class="fas fa-user-shield me-2"></i>Informations de l'administrateur</h3>
+                    <h3><i class="fas fa-user-shield me-2"></i><span th:text="#{org.admin.info}">Informations de l'administrateur</span></h3>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="prenom" class="form-label required-field">Prénom</label>
+                            <label for="prenom" class="form-label required-field" th:text="#{org.firstname}">Prénom</label>
                             <input type="text" class="form-control" id="prenom" name="prenom" required>
                         </div>
                         
                         <div class="col-md-6 mb-3">
-                            <label for="nom" class="form-label required-field">Nom</label>
+                            <label for="nom" class="form-label required-field" th:text="#{org.lastname}">Nom</label>
                             <input type="text" class="form-control" id="nom" name="nom" required>
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label for="email" class="form-label required-field">Email</label>
+                            <label for="email" class="form-label required-field" th:text="#{org.email}">Email</label>
                             <input type="email" class="form-control" id="email" name="email" required>
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label for="password" class="form-label required-field">Mot de passe</label>
+                            <label for="password" class="form-label required-field" th:text="#{org.password}">Mot de passe</label>
                             <input type="password" class="form-control" id="password" name="password" required>
                         </div>
                     </div>
@@ -202,53 +218,53 @@
 
                 <!-- Informations de l'organisation -->
                 <div class="form-section">
-                    <h3><i class="fas fa-building me-2"></i>Informations de l'organisation</h3>
+                    <h3><i class="fas fa-building me-2"></i><span th:text="#{org.info}">Informations de l'organisation</span></h3>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="orgNom" class="form-label required-field">Nom de l'organisation</label>
+                            <label for="orgNom" class="form-label required-field" th:text="#{org.name}">Nom de l'organisation</label>
                             <input type="text" class="form-control" id="orgNom" name="orgNom" required>
                         </div>
 
                         <!-- Adresse -->
                         <div class="col-12 mb-3">
-                            <label for="adresse" class="form-label required-field">Adresse</label>
+                            <label for="adresse" class="form-label required-field" th:text="#{org.address}">Adresse</label>
                             <input type="text" class="form-control" id="adresse" name="adresse" required>
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <label for="ville" class="form-label required-field">Ville</label>
+                            <label for="ville" class="form-label required-field" th:text="#{org.city}">Ville</label>
                             <input type="text" class="form-control" id="ville" name="ville" required>
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <label for="pays" class="form-label required-field">Pays</label>
+                            <label for="pays" class="form-label required-field" th:text="#{org.country}">Pays</label>
                             <input type="text" class="form-control" id="pays" name="pays" required>
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <label for="codePostal" class="form-label required-field">Code Postal</label>
+                            <label for="codePostal" class="form-label required-field" th:text="#{org.zip}">Code Postal</label>
                             <input type="text" class="form-control" id="codePostal" name="codePostal" required>
                         </div>
 
                         <!-- Contact -->
                         <div class="col-md-6 mb-3">
-                            <label for="orgEmail" class="form-label required-field">Email de l'organisation</label>
+                            <label for="orgEmail" class="form-label required-field" th:text="#{org.orgemail}">Email de l'organisation</label>
                             <input type="email" class="form-control" id="orgEmail" name="orgEmail" required>
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label for="telephone" class="form-label required-field">Téléphone</label>
+                            <label for="telephone" class="form-label required-field" th:text="#{org.phone}">Téléphone</label>
                             <input type="tel" class="form-control" id="telephone" name="telephone" required>
                         </div>
 
                         <!-- Description et Logo -->
                         <div class="col-12 mb-3">
-                            <label for="description" class="form-label">Description</label>
+                            <label for="description" class="form-label" th:text="#{org.description}">Description</label>
                             <textarea class="form-control" id="description" name="description" rows="4" placeholder="Décrivez votre organisation et ses objectifs..."></textarea>
                         </div>
 
                         <div class="col-12 mb-3">
-                            <label for="logo" class="form-label">Logo</label>
+                            <label for="logo" class="form-label" th:text="#{org.logo}">Logo</label>
                             <input type="file" class="form-control" id="logo" name="logo" accept="image/*">
                             <div id="logoPreview" class="mt-2"></div>
                         </div>
@@ -257,7 +273,8 @@
 
                 <div class="text-center mt-4">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-user-plus me-2"></i>S'inscrire
+                        <i class="fas fa-user-plus me-2"></i>
+                        <span th:text="#{org.submit}">S'inscrire</span>
                     </button>
                 </div>
             </form>

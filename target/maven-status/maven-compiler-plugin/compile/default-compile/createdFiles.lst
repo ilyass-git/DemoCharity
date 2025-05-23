@@ -20,7 +20,6 @@ com\charityapp\repositories\OrganisationRepository.class
 com\charityapp\controllers\DonController.class
 com\charityapp\repositories\UtilisateurRepository.class
 com\charityapp\controllers\RegisterTypeController.class
-com\charityapp\config\WebConfig.class
 com\charityapp\dto\ActionChariteDTO.class
 com\charityapp\entities\Don.class
 com\charityapp\repositories\CategorieRepository.class

@@ -197,7 +197,8 @@
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <i class="fas fa-heart me-2"></i>HopeShare
+                <i class="fas fa-heart me-2"></i>
+                <span th:text="#{navbar.brand}">HopeShare</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -205,10 +206,25 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Accueil</a>
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-home me-1"></i>
+                            <span th:text="#{navbar.home}">Accueil</span>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/register"><i class="fas fa-user-plus me-1"></i>Inscription</a>
+                        <a class="nav-link" href="/register">
+                            <i class="fas fa-user-plus me-1"></i>
+                            <span th:text="#{navbar.register}">Inscription</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🌐 <span th:text="${#locale=='en' ? 'English' : 'Français'}">Langue</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="langDropdown">
+                            <li><a class="dropdown-item" href="?lang=fr">Français</a></li>
+                            <li><a class="dropdown-item" href="?lang=en">English</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -220,8 +236,8 @@
         <div class="login-container fade-in">
             <div class="login-header">
                 <i class="fas fa-sign-in-alt"></i>
-                <h2>Connexion</h2>
-                <p class="text-muted">Connectez-vous à votre compte HopeShare</p>
+                <h2 th:text="#{login.title}">Connexion</h2>
+                <p class="text-muted" th:text="#{login.subtitle}">Connectez-vous à votre compte HopeShare</p>
             </div>
 
             <div th:if="${error}" class="alert alert-danger fade-in" role="alert">
@@ -230,16 +246,16 @@
 
             <form id="loginForm">
                 <div class="form-section">
-                    <h3><i class="fas fa-user me-2"></i>Informations de connexion</h3>
+                    <h3><i class="fas fa-user me-2"></i><span th:text="#{login.title}">Connexion</span></h3>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
+                        <label for="email" class="form-label" th:text="#{login.email}">Email</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                             <input type="email" class="form-control" id="email" name="email" required>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="password" class="form-label">Mot de passe</label>
+                        <label for="password" class="form-label" th:text="#{login.password}">Mot de passe</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-lock"></i></span>
                             <input type="password" class="form-control" id="password" name="password" required>
@@ -248,21 +264,23 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    <span th:text="#{login.button}">Se connecter</span>
                 </button>
             </form>
 
             <div class="divider">
-                <span>ou</span>
+                <span th:text="#{login.or}">ou</span>
             </div>
 
             <button class="btn btn-google" disabled>
                 <img src="https://www.google.com/favicon.ico" alt="Google">
-                Se connecter avec Google
+                <span th:text="#{login.with.google}">Se connecter avec Google</span>
             </button>
 
             <div class="text-center mt-3">
-                <p>Pas encore de compte ? <a href="/register" class="text-primary">Inscrivez-vous</a></p>
+                <span th:text="#{login.no.account}">Pas encore de compte ?</span>
+                <a href="/register" th:text="#{login.register}">Créer un compte</a>
             </div>
         </div>
     </div>
