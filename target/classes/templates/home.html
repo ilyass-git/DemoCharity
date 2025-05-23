@@ -408,6 +408,12 @@
         <section class="main-section mb-5" id="actions">
             <div class="section-title" th:text="#{section.actions.title}">Actions de charité</div>
             <div class="section-desc" th:text="#{section.actions.desc}">Découvrez et soutenez nos actions de charité en cours</div>
+            <div class="mb-3 text-end">
+                <a href="/organisation/actions" class="btn btn-success">
+                    <i class="fas fa-plus me-2"></i>
+                    <span th:text="#{action.create.button}">Créer une Action</span>
+                </a>
+            </div>
             <div class="section-container">
                 <div class="section-row" id="charityActions">
                     <!-- Les actions seront chargées dynamiquement ici -->

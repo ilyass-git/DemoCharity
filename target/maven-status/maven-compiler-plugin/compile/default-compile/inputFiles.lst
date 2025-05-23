@@ -1,3 +1,4 @@
+C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\controllers\OrganisationActionsPageController.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\controllers\DonController.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\controllers\RegisterTypeController.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\security\CustomUserDetailsService.java
@@ -16,6 +17,7 @@ C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\controllers\AuthenticationController.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\entities\Categorie.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\services\CategorieService.java
+C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\config\I18nConfig.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\entities\Don.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\services\OrganisationService.java
 C:\Users\thinkpad\Desktop\test_projects\demoCharity\src\main\java\com\charityapp\services\IOrganisationService.java

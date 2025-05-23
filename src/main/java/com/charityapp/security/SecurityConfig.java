@@ -26,6 +26,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Arrays;
 
+/**
+ * Configuration de sécurité de l'application
+ * Cette classe définit les règles de sécurité, l'authentification et les autorisations
+ * Elle configure également CORS, CSRF et la gestion des sessions
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -35,30 +40,43 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
 
+    /**
+     * Configuration principale de la chaîne de filtres de sécurité
+     * Définit les règles d'accès, la gestion des sessions et les filtres
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         logger.info("Configuring security filter chain");
         
         http
+            // Désactive la protection CSRF pour l'API REST
             .csrf(csrf -> {
                 csrf.disable();
                 logger.info("CSRF protection disabled");
             })
+            // Configure CORS pour permettre les requêtes cross-origin
             .cors(cors -> {
                 cors.configurationSource(corsConfigurationSource());
                 logger.info("CORS configuration applied");
             })
+            // Définit les règles d'autorisation pour les endpoints
             .authorizeHttpRequests(auth -> {
                 logger.info("Configuring authorization rules");
                 auth
-                    .requestMatchers("/api/auth/**", "/api/organisations/register", "/api/organisations/validees", 
-                                   "/api/actions", "/api/categories", "/", "/login", "/register", 
-                                   "/register-type", "/organisation/register", "/donateur/register", 
-                                   "/home", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+                    // Endpoints publics accessibles sans authentification
+                    .requestMatchers("/api/auth/**", "/api/organisations/register", 
+                                   "/api/organisations/validees", 
+                                   "/api/categories", "/", "/login", "/register", 
+                                   "/register-type", "/organisation/register", 
+                                   "/donateur/register", "/home", "/css/**", 
+                                   "/js/**", "/images/**", "/uploads/**").permitAll()
+                    // Endpoints nécessitant une authentification
                     .requestMatchers("/api/utilisateurs/me", "/admin/**").authenticated()
+                    // Tous les autres endpoints nécessitent une authentification
                     .anyRequest().authenticated();
                 logger.info("Authorization rules configured");
             })
+            // Configure la page de login personnalisée
             .formLogin(form -> {
                 form
                     .loginPage("/login")
@@ -66,6 +84,7 @@ public class SecurityConfig {
                     .permitAll();
                 logger.info("Form login configured");
             })
+            // Configure la déconnexion
             .logout(logout -> {
                 logout
                     .logoutUrl("/logout")
@@ -73,12 +92,16 @@ public class SecurityConfig {
                     .permitAll();
                 logger.info("Logout configured");
             })
+            // Configure la gestion des sessions comme stateless
             .sessionManagement(session -> {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 logger.info("Session management configured to STATELESS");
             })
+            // Configure le provider d'authentification
             .authenticationProvider(authenticationProvider())
+            // Ajoute le filtre JWT avant le filtre d'authentification par défaut
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            // Configure la gestion des erreurs d'authentification
             .exceptionHandling(exception -> {
                 exception.authenticationEntryPoint((request, response, authException) -> {
                     logger.error("Authentication error: {}", authException.getMessage());
@@ -92,6 +115,10 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Configuration CORS pour permettre les requêtes cross-origin
+     * Définit les origines, méthodes et headers autorisés
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -104,6 +131,10 @@ public class SecurityConfig {
         return source;
     }
 
+    /**
+     * Configuration du provider d'authentification
+     * Utilise UserDetailsService pour charger les utilisateurs
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         logger.info("Configuring authentication provider");
@@ -114,12 +145,21 @@ public class SecurityConfig {
         return authProvider;
     }
 
+    /**
+     * Configuration du gestionnaire d'authentification
+     * Utilisé pour l'authentification des utilisateurs
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         logger.info("Configuring authentication manager");
         return config.getAuthenticationManager();
     }
 
+    /**
+     * Configuration de l'encodeur de mot de passe
+     * Note: NoOpPasswordEncoder est utilisé pour le développement
+     * À remplacer par BCryptPasswordEncoder en production
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         logger.info("Using NoOpPasswordEncoder for password encoding");

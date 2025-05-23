@@ -27,11 +27,55 @@
     </style>
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heart me-2"></i>
+                <span th:text="#{navbar.brand}">HopeShare</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-home me-1"></i>
+                            <span th:text="#{navbar.home}">Accueil</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">
+                            <i class="fas fa-sign-in-alt me-1"></i>
+                            <span th:text="#{navbar.login}">Connexion</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">
+                            <i class="fas fa-user-plus me-1"></i>
+                            <span th:text="#{navbar.register}">Inscription</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🌐 <span th:text="${#locale=='en' ? 'English' : 'Français'}">Langue</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="langDropdown">
+                            <li><a class="dropdown-item" href="?lang=fr">Français</a></li>
+                            <li><a class="dropdown-item" href="?lang=en">English</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Mes Actions Caritatives</h2>
+            <h2 th:text="#{org.actions.title}">Mes Actions Caritatives</h2>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newActionModal">
-                <i class="fas fa-plus"></i> Nouvelle Action
+                <i class="fas fa-plus"></i> <span th:text="#{org.actions.new}">Nouvelle Action</span>
             </button>
         </div>
 
@@ -45,61 +89,60 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Nouvelle Action Caritative</h5>
+                        <h5 class="modal-title" th:text="#{org.actions.new}">Nouvelle Action Caritative</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <form id="newActionForm">
                             <div class="mb-3">
-                                <label for="titre" class="form-label required-field">Titre</label>
+                                <label for="titre" class="form-label required-field" th:text="#{org.actions.title.label}">Titre</label>
                                 <input type="text" class="form-control" id="titre" name="titre" required>
                             </div>
-                            
                             <div class="mb-3">
-                                <label for="description" class="form-label required-field">Description</label>
+                                <label for="description" class="form-label required-field" th:text="#{org.actions.description}">Description</label>
                                 <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="dateDebut" class="form-label required-field">Date de début</label>
+                                    <label for="dateDebut" class="form-label required-field" th:text="#{org.actions.start}">Date de début</label>
                                     <input type="date" class="form-control" id="dateDebut" name="dateDebut" required>
                                 </div>
-                                
                                 <div class="col-md-6 mb-3">
-                                    <label for="dateFin" class="form-label required-field">Date de fin</label>
+                                    <label for="dateFin" class="form-label required-field" th:text="#{org.actions.end}">Date de fin</label>
                                     <input type="date" class="form-control" id="dateFin" name="dateFin" required>
                                 </div>
                             </div>
-
                             <div class="mb-3">
-                                <label for="lieu" class="form-label required-field">Lieu</label>
+                                <label for="lieu" class="form-label required-field" th:text="#{org.actions.place}">Lieu</label>
                                 <input type="text" class="form-control" id="lieu" name="lieu" required>
                             </div>
-
                             <div class="mb-3">
-                                <label for="objectifDons" class="form-label required-field">Objectif de dons</label>
+                                <label for="objectifDons" class="form-label required-field" th:text="#{org.actions.goal}">Objectif de dons</label>
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="objectifDons" name="objectifDons" required>
                                     <span class="input-group-text">€</span>
                                 </div>
                             </div>
-
                             <div class="mb-3">
-                                <label for="image" class="form-label">Image</label>
+                                <label for="categorie" class="form-label required-field" th:text="#{org.actions.category}">Catégorie</label>
+                                <select class="form-select" id="categorie" name="categorie" required>
+                                    <option value="">Sélectionnez une catégorie</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="image" class="form-label" th:text="#{org.actions.image}">Image</label>
                                 <input type="file" class="form-control" id="image" name="image" accept="image/*">
                                 <div id="imagePreview" class="mt-2"></div>
                             </div>
-
                             <div class="mb-3">
-                                <label for="video" class="form-label">Vidéo</label>
+                                <label for="video" class="form-label" th:text="#{org.actions.video}">Vidéo</label>
                                 <input type="file" class="form-control" id="video" name="video" accept="video/*">
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-primary" id="saveAction">Publier</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{org.actions.cancel}">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="saveAction" th:text="#{org.actions.publish}">Publier</button>
                     </div>
                 </div>
             </div>
@@ -110,47 +153,66 @@
     <script>
         // Chargement des actions
         function loadActions() {
-            fetch('/api/organisations/actions')
-                .then(response => response.json())
-                .then(actions => {
-                    const actionsList = document.getElementById('actionsList');
-                    actionsList.innerHTML = '';
-                    
-                    actions.forEach(action => {
-                        const progress = (action.montantActuel / action.objectifDons) * 100;
-                        actionsList.innerHTML += `
-                            <div class="col-md-6 col-lg-4">
-                                <div class="card action-card">
-                                    <img src="${action.imageUrl || '/images/default.jpg'}" class="card-img-top action-image" alt="${action.titre}">
-                                    <div class="card-body">
-                                        <h5 class="card-title">${action.titre}</h5>
-                                        <p class="card-text">${action.description}</p>
-                                        <div class="progress mb-3">
-                                            <div class="progress-bar" role="progressbar" style="width: ${progress}%">
-                                                ${progress.toFixed(1)}%
-                                            </div>
+            const token = localStorage.getItem('token');
+            fetch('/api/actions', {
+                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+            })
+            .then(response => response.json())
+            .then(actions => {
+                const actionsList = document.getElementById('actionsList');
+                actionsList.innerHTML = '';
+                
+                actions.forEach(action => {
+                    const progress = (action.montantActuel / action.objectifDons) * 100;
+                    actionsList.innerHTML += `
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card action-card">
+                                <img src="${action.imageUrl || '/images/default.jpg'}" class="card-img-top action-image" alt="${action.titre}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${action.titre}</h5>
+                                    <p class="card-text">${action.description}</p>
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar" role="progressbar" style="width: ${progress}%">
+                                            ${progress.toFixed(1)}%
                                         </div>
-                                        <p class="card-text">
-                                            <small class="text-muted">
-                                                Objectif: ${action.objectifDons}€ | 
-                                                Collecté: ${action.montantActuel}€
-                                            </small>
-                                        </p>
-                                        <div class="d-flex justify-content-between">
-                                            <button class="btn btn-sm btn-outline-primary" onclick="editAction(${action.id})">
-                                                <i class="fas fa-edit"></i> Modifier
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" onclick="archiveAction(${action.id})">
-                                                <i class="fas fa-archive"></i> Archiver
-                                            </button>
-                                        </div>
+                                    </div>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            Objectif: ${action.objectifDons}€ | 
+                                            Collecté: ${action.montantActuel}€
+                                        </small>
+                                    </p>
+                                    <div class="d-flex justify-content-between">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="editAction(${action.id})">
+                                            <i class="fas fa-edit"></i> Modifier
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="archiveAction(${action.id})">
+                                            <i class="fas fa-archive"></i> Archiver
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                        `;
+                        </div>
+                    `;
+                });
+            })
+            .catch(error => console.error('Erreur lors du chargement des actions:', error));
+        }
+
+        // Chargement des catégories
+        function loadCategories() {
+            fetch('/api/categories')
+                .then(response => response.json())
+                .then(categories => {
+                    const select = document.getElementById('categorie');
+                    categories.forEach(categorie => {
+                        const option = document.createElement('option');
+                        option.value = categorie.id;
+                        option.textContent = categorie.nom;
+                        select.appendChild(option);
                     });
                 })
-                .catch(error => console.error('Erreur lors du chargement des actions:', error));
+                .catch(error => console.error('Erreur lors du chargement des catégories:', error));
         }
 
         // Prévisualisation de l'image
@@ -171,24 +233,67 @@
             const form = document.getElementById('newActionForm');
             const formData = new FormData(form);
             
-            fetch('/api/organisations/actions', {
+            // Récupérer le token JWT du localStorage
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Vous devez être connecté pour créer une action');
+                window.location.href = '/login';
+                return;
+            }
+
+            // Convertir les dates en format ISO
+            const dateDebut = new Date(formData.get('dateDebut')).toISOString();
+            const dateFin = new Date(formData.get('dateFin')).toISOString();
+
+            // Créer l'objet action
+            const actionData = {
+                titre: formData.get('titre'),
+                description: formData.get('description'),
+                dateDebut: dateDebut,
+                dateFin: dateFin,
+                lieu: formData.get('lieu'),
+                objectifCollecte: parseFloat(formData.get('objectifDons')),
+                categorieId: parseInt(formData.get('categorie'))
+            };
+
+            // Vérifier que tous les champs requis sont remplis
+            if (!actionData.titre || !actionData.description || !actionData.dateDebut || 
+                !actionData.dateFin || !actionData.lieu || !actionData.objectifCollecte || 
+                !actionData.categorieId) {
+                alert('Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+
+            // Envoyer la requête avec le token
+            fetch('/api/actions', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(actionData)
             })
             .then(response => {
                 if (response.ok) {
                     bootstrap.Modal.getInstance(document.getElementById('newActionModal')).hide();
                     loadActions();
                     form.reset();
+                    document.getElementById('imagePreview').innerHTML = '';
                 } else {
                     throw new Error('Erreur lors de la création de l\'action');
                 }
             })
-            .catch(error => alert('Erreur: ' + error.message));
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la création de l\'action: ' + error.message);
+            });
         });
 
-        // Chargement initial des actions
-        loadActions();
+        // Chargement initial
+        document.addEventListener('DOMContentLoaded', function() {
+            loadActions();
+            loadCategories();
+        });
     </script>
 </body>
 </html> 

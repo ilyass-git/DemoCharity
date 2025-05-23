@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZoneId;
@@ -57,6 +59,15 @@ public class ActionDeChariteController {
     public ResponseEntity<?> createAction(@RequestBody ActionChariteDTO dto) {
         logger.info("Création d'une nouvelle action de charité: {}", dto.getTitre());
         try {
+            // Log d'authentification
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth == null) {
+                logger.error("Aucun utilisateur authentifié (auth == null)");
+            } else {
+                logger.info("Utilisateur authentifié: {}", auth.getName());
+                logger.info("Authorities: {}", auth.getAuthorities());
+                logger.info("Détails de l'authentification: {}", auth);
+            }
             // Vérifier si la catégorie existe
             Categorie categorie = categorieService.getCategorieById(dto.getCategorieId());
             if (categorie == null) {

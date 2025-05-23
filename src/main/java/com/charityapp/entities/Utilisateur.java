@@ -19,12 +19,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.HashSet;
 
+/**
+ * Entité Utilisateur représentant tous les types d'utilisateurs du système
+ * Cette classe gère les informations d'authentification et les rôles des utilisateurs
+ * Elle est liée aux organisations (pour les admins) et aux dons (pour les donateurs)
+ */
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "utilisateur")
 public class Utilisateur implements UserDetails {
+    /**
+     * Identifiant unique de l'utilisateur
+     * Généré automatiquement par la base de données
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,9 +44,17 @@ public class Utilisateur implements UserDetails {
     @Column(nullable = false)
     private String nom;
 
+    /**
+     * Email de l'utilisateur, utilisé comme identifiant de connexion
+     * Doit être unique dans le système
+     */
     @Column(nullable = false, unique = true)
     private String email;
 
+    /**
+     * Mot de passe hashé de l'utilisateur
+     * Ne doit jamais être stocké en clair
+     */
     @Column(name = "mot_de_passe", nullable = false)
     private String motDePasse;
 
@@ -66,6 +83,11 @@ public class Utilisateur implements UserDetails {
     @Column(name = "date_modification")
     private LocalDateTime dateModification;
 
+    /**
+     * Liste des organisations gérées par cet utilisateur
+     * Relation bidirectionnelle avec Organisation
+     * Un utilisateur peut gérer plusieurs organisations
+     */
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Don> dons;

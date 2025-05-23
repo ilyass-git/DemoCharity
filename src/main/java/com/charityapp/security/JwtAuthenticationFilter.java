@@ -64,7 +64,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         
         final String authHeader = request.getHeader("Authorization");
         logger.info("Auth header: {}", authHeader);
-        
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             logger.info("Pas de token Bearer trouvé, continuation de la chaîne de filtres");
             filterChain.doFilter(request, response);
@@ -73,11 +73,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String jwt = authHeader.substring(7);
         logger.info("Token JWT trouvé: {}", jwt);
-        
+
         try {
             final String userEmail = jwtService.extractUsername(jwt);
             logger.info("Email extrait du token: {}", userEmail);
-            
+
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 logger.info("Chargement des détails de l'utilisateur pour: {}", userEmail);
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
