@@ -6,8 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,9 +26,16 @@ public class OrganisationController {
     private final OrganisationService organisationService;
 
     @GetMapping
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<List<Organisation>> getAllOrganisations() {
         try {
+            logger.info("=== Récupération de toutes les organisations ===");
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            logger.info("Utilisateur authentifié : {}", auth.getName());
+            logger.info("Rôles : {}", auth.getAuthorities());
+            
             List<Organisation> organisations = organisationService.getAllOrganisations();
+            logger.info("Nombre d'organisations trouvées : {}", organisations.size());
             return ResponseEntity.ok(organisations);
         } catch (Exception e) {
             logger.error("Erreur lors de la récupération des organisations", e);
@@ -107,10 +117,31 @@ public class OrganisationController {
     }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    @GetMapping("/en-attente")
+    @GetMapping(value = "/en-attente", produces = "application/json; charset=UTF-8")
     public ResponseEntity<List<Organisation>> getOrganisationsEnAttente() {
         try {
-            return ResponseEntity.ok(organisationService.getOrganisationsEnAttente());
+            logger.info("=== Récupération des organisations en attente ===");
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            logger.info("Utilisateur authentifié : {}", auth.getName());
+            logger.info("Rôles : {}", auth.getAuthorities());
+            
+            List<Organisation> organisations = organisationService.getOrganisationsEnAttente();
+            logger.info("Nombre d'organisations en attente trouvées : {}", organisations.size());
+            
+            // Log détaillé de chaque organisation
+            organisations.forEach(org -> {
+                logger.info("Organisation trouvée :");
+                logger.info("  - ID : {}", org.getId());
+                logger.info("  - Nom : {}", org.getNom());
+                logger.info("  - Email : {}", org.getEmail());
+                logger.info("  - Statut : {}", org.getStatut());
+                logger.info("  - Ville : {}", org.getVille());
+                logger.info("  - Pays : {}", org.getPays());
+            });
+            
+            return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(organisations);
         } catch (Exception e) {
             logger.error("Erreur lors de la récupération des organisations en attente", e);
             return ResponseEntity.internalServerError().build();

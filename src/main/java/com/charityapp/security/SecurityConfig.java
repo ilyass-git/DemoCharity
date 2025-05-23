@@ -55,6 +55,7 @@ public class SecurityConfig {
                                    "/api/actions", "/api/categories", "/", "/login", "/register", 
                                    "/register-type", "/organisation/register", "/donateur/register", 
                                    "/home", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+                    .requestMatchers("/api/utilisateurs/me", "/admin/**").authenticated()
                     .anyRequest().authenticated();
                 logger.info("Authorization rules configured");
             })

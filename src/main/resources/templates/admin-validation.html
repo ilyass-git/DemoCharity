@@ -1,53 +1,271 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validation des Organisations</title>
+    <title>Validation des Organisations - HopeShare</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .org-card {
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --accent-color: #FFC107;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: var(--primary-color) !important;
+        }
+
+        .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: bold;
             margin-bottom: 1.5rem;
-            transition: transform 0.2s;
         }
-        .org-card:hover {
+
+        .hero-section p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #388E3C;
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+            margin: 1rem auto;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
+
         .org-logo {
             width: 100px;
             height: 100px;
             object-fit: cover;
             border-radius: 50%;
+            border: 3px solid var(--primary-color);
+            padding: 3px;
         }
+
         .status-badge {
             position: absolute;
             top: 10px;
             right: 10px;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 500;
+        }
+
+        .btn-group .btn {
+            border-radius: 25px;
+            margin: 0 5px;
+            padding: 0.5rem 1.5rem;
+        }
+
+        .btn-group .btn.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .search-input {
+            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid #ddd;
+        }
+
+        .search-button {
+            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+            margin-left: -50px;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .modal-footer {
+            border-radius: 0 0 15px 15px;
+        }
+
+        .btn-success {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 3rem 0;
+            margin-top: auto;
+        }
+
+        .footer h5 {
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--accent-color);
+        }
+
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
         }
     </style>
 </head>
 <body>
-    <!-- Inclusion de la navigation -->
-    <div th:replace="fragments/nav :: nav"></div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heart me-2"></i>HopeShare
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-1"></i>Déconnexion</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
+    <!-- En-tête de la page -->
     <div class="container mt-4">
-        <h2 class="mb-4">Validation des Organisations</h2>
+        <h2 class="section-title">Validation des Organisations</h2>
+        <p class="text-center mb-4">Gérez les demandes d'inscription des organisations caritatives et contribuez à la croissance de notre communauté.</p>
+    </div>
 
+    <!-- Main Content -->
+    <div class="container">
         <!-- Filtres -->
         <div class="row mb-4">
             <div class="col-md-6">
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-outline-primary active" data-status="all">Toutes</button>
-                    <button type="button" class="btn btn-outline-warning" data-status="EN_ATTENTE">En attente</button>
-                    <button type="button" class="btn btn-outline-success" data-status="VALIDEE">Validées</button>
-                    <button type="button" class="btn btn-outline-danger" data-status="REJETEE">Rejetées</button>
+                    <button type="button" class="btn btn-outline-primary active" data-status="all">
+                        <i class="fas fa-list me-2"></i>Toutes
+                    </button>
+                    <button type="button" class="btn btn-outline-warning" data-status="EN_ATTENTE">
+                        <i class="fas fa-clock me-2"></i>En attente
+                    </button>
+                    <button type="button" class="btn btn-outline-success" data-status="VALIDEE">
+                        <i class="fas fa-check me-2"></i>Validées
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" data-status="REJETEE">
+                        <i class="fas fa-times me-2"></i>Rejetées
+                    </button>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Rechercher une organisation..." id="searchInput">
-                    <button class="btn btn-outline-secondary" type="button" id="searchButton">
+                    <input type="text" class="form-control search-input" placeholder="Rechercher une organisation..." id="searchInput">
+                    <button class="btn btn-primary search-button" type="button" id="searchButton">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
@@ -57,6 +275,7 @@
         <!-- Liste des organisations -->
         <div class="row" id="organisationsList">
             <!-- Les organisations seront ajoutées dynamiquement ici -->
+        </div>
         </div>
 
         <!-- Modal Détails Organisation -->
@@ -74,62 +293,239 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <p><strong>NIF:</strong> <span id="modalNif"></span></p>
-                                <p><strong>Email:</strong> <span id="modalEmail"></span></p>
-                                <p><strong>Téléphone:</strong> <span id="modalTelephone"></span></p>
+                            <p><i class="fas fa-id-card me-2"></i><strong>NIF:</strong> <span id="modalNif"></span></p>
+                            <p><i class="fas fa-envelope me-2"></i><strong>Email:</strong> <span id="modalEmail"></span></p>
+                            <p><i class="fas fa-phone me-2"></i><strong>Téléphone:</strong> <span id="modalTelephone"></span></p>
                             </div>
                             <div class="col-md-6">
-                                <p><strong>Adresse:</strong> <span id="modalAdresse"></span></p>
-                                <p><strong>Ville:</strong> <span id="modalVille"></span></p>
-                                <p><strong>Pays:</strong> <span id="modalPays"></span></p>
+                            <p><i class="fas fa-map-marker-alt me-2"></i><strong>Adresse:</strong> <span id="modalAdresse"></span></p>
+                            <p><i class="fas fa-city me-2"></i><strong>Ville:</strong> <span id="modalVille"></span></p>
+                            <p><i class="fas fa-globe me-2"></i><strong>Pays:</strong> <span id="modalPays"></span></p>
                             </div>
                         </div>
                         <div class="mt-3">
-                            <h5>Description</h5>
+                        <h5><i class="fas fa-info-circle me-2"></i>Description</h5>
                             <p id="modalDescription"></p>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Fermer
+                    </button>
                         <div id="validationButtons">
                             <button type="button" class="btn btn-success" id="validateButton">
-                                <i class="fas fa-check"></i> Valider
+                            <i class="fas fa-check me-2"></i>Valider
                             </button>
                             <button type="button" class="btn btn-danger" id="rejectButton">
-                                <i class="fas fa-times"></i> Rejeter
+                            <i class="fas fa-times me-2"></i>Rejeter
                             </button>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>À propos de HopeShare</h5>
+                    <p>Une plateforme dédiée à la promotion et au soutien des actions de charité. Ensemble, nous pouvons faire la différence.</p>
+                    <div class="social-icons mt-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h5>Liens rapides</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/"><i class="fas fa-chevron-right me-2"></i>Accueil</a></li>
+                        <li><a href="/admin/validation"><i class="fas fa-chevron-right me-2"></i>Validation des organisations</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-map-marker-alt me-2"></i>123 Rue de la Charité, 75001 Paris</li>
+                        <li><i class="fas fa-envelope me-2"></i>contact@hopeshare.com</li>
+                        <li><i class="fas fa-phone me-2"></i>+33 1 23 45 67 89</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-4 mb-4">
+            <div class="text-center">
+                <p>&copy; 2024 HopeShare. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/auth.js"></script>
     <script>
+        // Log immédiat pour vérifier que le script est chargé
+        console.log('=== Script de validation chargé ===');
+        console.log('=== Vérification de l\'environnement ===');
+        console.log('Window:', window);
+        console.log('Document:', document);
+        console.log('LocalStorage disponible:', !!window.localStorage);
+        
         let currentOrganisations = [];
         let currentFilter = 'all';
+        let token = null;
 
-        // Chargement des organisations
-        function loadOrganisations() {
-            fetch('/api/organisations', {
+        // Initialisation immédiate
+        (function() {
+            console.log('=== Démarrage de l\'initialisation ===');
+            
+            // Récupérer le token du localStorage
+            token = localStorage.getItem('token');
+            console.log('Token trouvé:', token ? 'Oui' : 'Non');
+            console.log('Token complet:', token);
+            
+            if (!token) {
+                console.error('Token non trouvé dans le localStorage');
+                window.location.href = '/login';
+                return;
+            }
+
+            // Vérifier si l'utilisateur est un super admin
+            console.log('Vérification des droits d\'administration...');
+            fetch('/api/utilisateurs/me', {
                 headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 }
             })
                 .then(response => {
+                console.log('Réponse de /api/utilisateurs/me:', response.status);
                     if (!response.ok) {
                         throw new Error('Erreur d\'authentification');
                     }
                     return response.json();
                 })
-                .then(organisations => {
-                    currentOrganisations = organisations;
+            .then(user => {
+                console.log('Données utilisateur reçues:', user);
+                console.log('Rôles:', user.roles);
+                
+                if (user.roles && Array.isArray(user.roles) && user.roles.includes('ROLE_SUPER_ADMIN')) {
+                    console.log('Utilisateur est super admin, chargement des organisations...');
+                    loadOrganisations();
+                } else {
+                    console.error('L\'utilisateur n\'a pas les droits d\'administration');
+                    window.location.href = '/';
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            });
+
+            // Configuration des événements de filtrage
+            document.querySelectorAll('[data-status]').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('[data-status]').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.status;
+                    console.log('Filtre changé:', currentFilter);
                     filterOrganisations();
+                });
+            });
+
+            document.getElementById('searchInput').addEventListener('input', filterOrganisations);
+            document.getElementById('searchButton').addEventListener('click', filterOrganisations);
+        })();
+
+        // Chargement des organisations
+        function loadOrganisations() {
+            console.log('=== Chargement des organisations ===');
+            console.log('Token utilisé:', token);
+            
+            const organisationsList = document.getElementById('organisationsList');
+            if (!organisationsList) {
+                console.error('Élément organisationsList non trouvé dans le DOM');
+                return;
+            }
+            
+            organisationsList.innerHTML = '<div class="col-12 text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Chargement...</span></div></div>';
+            
+            // Déterminer l'endpoint en fonction du filtre actuel
+            let endpoint = '/api/organisations';
+            if (currentFilter === 'VALIDEE') {
+                endpoint = '/api/organisations/validees';
+            } else if (currentFilter === 'EN_ATTENTE') {
+                endpoint = '/api/organisations/en-attente';
+            }
+            
+            console.log('Utilisation de l\'endpoint:', endpoint);
+            
+            fetch(endpoint, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'Accept': 'application/json; charset=UTF-8'
+                }
+            })
+            .then(response => {
+                console.log('Réponse du serveur:', response.status);
+                if (!response.ok) {
+                    if (response.status === 403) {
+                        throw new Error('Accès non autorisé. Vérifiez que vous êtes bien super admin.');
+                    } else if (response.status === 401) {
+                        throw new Error('Non authentifié. Veuillez vous reconnecter.');
+                    } else {
+                        throw new Error('Erreur lors du chargement des organisations');
+                    }
+                }
+                return response.text().then(text => {
+                    console.log('Réponse brute:', text);
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        console.error('Erreur de parsing JSON:', e);
+                        throw new Error('Format de réponse invalide');
+                    }
+                });
+            })
+            .then(organisations => {
+                console.log('Organisations reçues:', organisations);
+                if (!Array.isArray(organisations)) {
+                    console.error('Format de réponse invalide:', organisations);
+                    throw new Error('Format de réponse invalide');
+                }
+                
+                // Vérification des données
+                organisations.forEach((org, index) => {
+                    console.log(`Vérification de l'organisation ${index + 1}:`, {
+                        id: org.id,
+                        nom: org.nom,
+                        email: org.email,
+                        statut: org.statut,
+                        ville: org.ville,
+                        pays: org.pays
+                    });
+                });
+                
+                currentOrganisations = organisations;
+                displayOrganisations(organisations);
                 })
                 .catch(error => {
                     console.error('Erreur lors du chargement des organisations:', error);
-                    if (error.message === 'Erreur d\'authentification') {
+                organisationsList.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            ${error.message}
+                        </div>
+                    </div>
+                `;
+                if (error.message.includes('Non authentifié')) {
+                    localStorage.removeItem('token');
                         window.location.href = '/login';
                     }
                 });
@@ -137,44 +533,64 @@
 
         // Filtrage des organisations
         function filterOrganisations() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const filteredOrgs = currentOrganisations.filter(org => {
-                const matchesFilter = currentFilter === 'all' || org.statut === currentFilter;
-                const matchesSearch = org.nom.toLowerCase().includes(searchTerm) ||
-                                    org.email.toLowerCase().includes(searchTerm) ||
-                                    org.nif.toLowerCase().includes(searchTerm);
-                return matchesFilter && matchesSearch;
-            });
-
-            displayOrganisations(filteredOrgs);
+            console.log('=== Filtrage des organisations ===');
+            console.log('Filtre actuel:', currentFilter);
+            
+            // Recharger les organisations avec le nouveau filtre
+            loadOrganisations();
         }
 
         // Affichage des organisations
         function displayOrganisations(organisations) {
+            console.log('=== Affichage des organisations ===');
+            console.log('Nombre d\'organisations à afficher:', organisations.length);
+            
             const organisationsList = document.getElementById('organisationsList');
             organisationsList.innerHTML = '';
             
-            organisations.forEach(org => {
+            if (organisations.length === 0) {
+                console.log('Aucune organisation à afficher');
+                organisationsList.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Aucune organisation trouvée.
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            console.log('Début de la création des cartes d\'organisations');
+            organisations.forEach((org, index) => {
+                console.log(`Création de la carte pour l'organisation ${index + 1}:`, org);
+                
                 const statusClass = {
                     'EN_ATTENTE': 'warning',
                     'VALIDEE': 'success',
                     'REJETEE': 'danger'
-                }[org.statut];
+                }[org.statut] || 'secondary';
+
+                const statusText = {
+                    'EN_ATTENTE': 'En attente',
+                    'VALIDEE': 'Validée',
+                    'REJETEE': 'Rejetée'
+                }[org.statut] || 'Inconnu';
 
                 const card = document.createElement('div');
-                card.className = 'col-md-4';
+                card.className = 'col-md-4 mb-4';
                 card.innerHTML = `
                     <div class="card org-card">
                         <div class="card-body">
-                            <span class="badge bg-${statusClass} status-badge">${org.statut}</span>
+                            <span class="badge bg-${statusClass} status-badge">${statusText}</span>
                             <div class="text-center mb-3">
                                 <img src="${org.logoUrl || '/images/default-org.jpg'}" alt="Logo" class="org-logo">
                             </div>
-                            <h5 class="card-title text-center">${org.nom}</h5>
+                            <h5 class="card-title text-center">${org.nom || 'Sans nom'}</h5>
                             <p class="card-text">
-                                <i class="fas fa-envelope me-2"></i>${org.email}<br>
-                                <i class="fas fa-phone me-2"></i>${org.telephone}<br>
-                                <i class="fas fa-map-marker-alt me-2"></i>${org.ville}, ${org.pays}
+                                <i class="fas fa-envelope me-2"></i>${org.email || 'Non renseigné'}<br>
+                                <i class="fas fa-phone me-2"></i>${org.telephone || 'Non renseigné'}<br>
+                                <i class="fas fa-map-marker-alt me-2"></i>${org.ville || 'Non renseigné'}, ${org.pays || 'Non renseigné'}
                             </p>
                             <button class="btn btn-primary w-100" onclick="showDetails(${org.id})">
                                 <i class="fas fa-info-circle me-2"></i>Voir détails
@@ -183,13 +599,19 @@
                     </div>
                 `;
                 organisationsList.appendChild(card);
+                console.log(`Carte créée pour l'organisation ${index + 1}`);
             });
+            console.log('Fin de la création des cartes d\'organisations');
         }
 
         // Affichage des détails d'une organisation
         function showDetails(orgId) {
+            console.log('=== Affichage des détails de l\'organisation ===', orgId);
             const org = currentOrganisations.find(o => o.id === orgId);
-            if (!org) return;
+            if (!org) {
+                console.error('Organisation non trouvée:', orgId);
+                return;
+            }
 
             document.getElementById('modalLogo').src = org.logoUrl || '/images/default-org.jpg';
             document.getElementById('modalNom').textContent = org.nom;
@@ -215,98 +637,137 @@
 
         // Validation d'une organisation
         function validateOrganisation(orgId) {
+            console.log('=== Validation de l\'organisation ===', orgId);
+            console.log('Token utilisé pour la validation:', token);
+            console.log('Headers de la requête:', {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            });
+            
+            if (!token) {
+                console.error('Token non trouvé pour la validation');
+                alert('Erreur d\'authentification. Veuillez vous reconnecter.');
+                window.location.href = '/login';
+                return;
+            }
+
             if (confirm('Êtes-vous sûr de vouloir valider cette organisation ?')) {
-                fetch(`/api/organisations/${orgId}/valider`, {
+                const url = `/api/organisations/${orgId}/valider?validateurId=1`;
+                console.log('URL de la requête:', url);
+                
+                fetch(url, {
                     method: 'POST',
                     headers: {
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        'Accept': 'application/json'
                     }
                 })
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de la validation');
+                    console.log('Réponse complète:', response);
+                    console.log('Status:', response.status);
+                    console.log('Status Text:', response.statusText);
+                    console.log('Headers:', Object.fromEntries(response.headers.entries()));
+                    
+                    if (response.status === 401) {
+                        console.error('Erreur 401 - Non autorisé');
+                        console.log('Token actuel:', token);
+                        throw new Error('Session expirée. Veuillez vous reconnecter.');
                     }
+                    if (!response.ok) {
+                        console.error('Erreur lors de la validation:', response.status);
+                        return response.text().then(text => {
+                            console.log('Réponse texte:', text);
+                            throw new Error(`Erreur lors de la validation: ${text}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(updatedOrg => {
+                    console.log('Organisation mise à jour:', updatedOrg);
+                    // Mettre à jour l'organisation dans la liste
+                    const index = currentOrganisations.findIndex(org => org.id === orgId);
+                    if (index !== -1) {
+                        currentOrganisations[index] = updatedOrg;
+                    }
+                    // Recharger la liste
                     loadOrganisations();
+                    // Fermer la modal
                     bootstrap.Modal.getInstance(document.getElementById('orgDetailsModal')).hide();
+                    // Afficher un message de succès
+                    alert('Organisation validée avec succès !');
                 })
                 .catch(error => {
-                    console.error('Erreur:', error);
-                    alert('Une erreur est survenue lors de la validation de l\'organisation');
+                    console.error('Erreur détaillée:', error);
+                    console.error('Stack trace:', error.stack);
+                    if (error.message.includes('Session expirée')) {
+                        console.log('Suppression du token et redirection vers login');
+                        localStorage.removeItem('token');
+                        window.location.href = '/login';
+                    } else {
+                        alert('Une erreur est survenue lors de la validation de l\'organisation: ' + error.message);
+                    }
                 });
             }
         }
 
         // Rejet d'une organisation
         function rejectOrganisation(orgId) {
-            if (confirm('Êtes-vous sûr de vouloir rejeter cette organisation ?')) {
-                fetch(`/api/organisations/${orgId}/rejeter`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erreur lors du rejet');
-                    }
-                    loadOrganisations();
-                    bootstrap.Modal.getInstance(document.getElementById('orgDetailsModal')).hide();
-                })
-                .catch(error => {
-                    console.error('Erreur:', error);
-                    alert('Une erreur est survenue lors du rejet de l\'organisation');
-                });
-            }
-        }
-
-        // Événements
-        document.addEventListener('DOMContentLoaded', function() {
-            // Vérification de l'authentification
-            const token = localStorage.getItem('token');
+            console.log('=== Rejet de l\'organisation ===', orgId);
+            console.log('Token utilisé pour le rejet:', token);
+            
             if (!token) {
+                console.error('Token non trouvé pour le rejet');
+                alert('Erreur d\'authentification. Veuillez vous reconnecter.');
                 window.location.href = '/login';
                 return;
             }
 
-            // Vérification du rôle SUPER_ADMIN
-            fetch('/api/user/current', {
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Non autorisé');
-                }
-                return response.json();
-            })
-            .then(user => {
-                if (!user.roles.includes('ROLE_SUPER_ADMIN')) {
-                    window.location.href = '/';
-                } else {
+            if (confirm('Êtes-vous sûr de vouloir rejeter cette organisation ?')) {
+                fetch(`/api/organisations/${orgId}/rejeter?validateurId=1`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    console.log('Réponse de rejet:', response.status);
+                    if (response.status === 401) {
+                        throw new Error('Session expirée. Veuillez vous reconnecter.');
+                    }
+                    if (!response.ok) {
+                        throw new Error('Erreur lors du rejet');
+                    }
+                    return response.json();
+                })
+                .then(updatedOrg => {
+                    console.log('Organisation mise à jour:', updatedOrg);
+                    // Mettre à jour l'organisation dans la liste
+                    const index = currentOrganisations.findIndex(org => org.id === orgId);
+                    if (index !== -1) {
+                        currentOrganisations[index] = updatedOrg;
+                    }
+                    // Recharger la liste
                     loadOrganisations();
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                window.location.href = '/login';
-            });
-
-            // Configuration des événements de filtrage
-            document.querySelectorAll('[data-status]').forEach(button => {
-                button.addEventListener('click', function() {
-                    document.querySelectorAll('[data-status]').forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    currentFilter = this.dataset.status;
-                    filterOrganisations();
+                    // Fermer la modal
+                    bootstrap.Modal.getInstance(document.getElementById('orgDetailsModal')).hide();
+                    // Afficher un message de succès
+                    alert('Organisation rejetée avec succès !');
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    if (error.message.includes('Session expirée')) {
+                        localStorage.removeItem('token');
+                        window.location.href = '/login';
+                    } else {
+                    alert('Une erreur est survenue lors du rejet de l\'organisation');
+                    }
                 });
-            });
-
-            document.getElementById('searchInput').addEventListener('input', filterOrganisations);
-            document.getElementById('searchButton').addEventListener('click', filterOrganisations);
-        });
+            }
+        }
     </script>
 </body>
 </html> 

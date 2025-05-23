@@ -24,7 +24,11 @@ public class OrganisationService implements IOrganisationService {
     
     @Override
     public List<Organisation> getAllOrganisations() {
-        return organisationRepository.findAll();
+        logger.info("Récupération de toutes les organisations");
+        List<Organisation> organisations = organisationRepository.findAll();
+        logger.info("Nombre d'organisations trouvées : {}", organisations.size());
+        organisations.forEach(org -> logger.info("Organisation : {} (ID: {}, Statut: {})", org.getNom(), org.getId(), org.getStatut()));
+        return organisations;
     }
     
     @Override
@@ -56,12 +60,12 @@ public class OrganisationService implements IOrganisationService {
         
         try {
             // Vérification de l'existence de l'admin
-            Utilisateur admin = utilisateurRepository.findById(adminId)
+        Utilisateur admin = utilisateurRepository.findById(adminId)
                 .orElseThrow(() -> {
                     logger.error("Admin non trouvé avec l'ID: {}", adminId);
                     return new RuntimeException("Admin non trouvé");
                 });
-            
+        
             // Vérification de l'unicité de l'email
             if (organisationRepository.findByEmail(organisation.getEmail()).isPresent()) {
                 logger.error("Email déjà utilisé: {}", organisation.getEmail());
@@ -69,8 +73,8 @@ public class OrganisationService implements IOrganisationService {
             }
             
             // Configuration de l'organisation
-            organisation.setAdmin(admin);
-            organisation.setStatut(StatutOrganisation.EN_ATTENTE);
+        organisation.setAdmin(admin);
+        organisation.setStatut(StatutOrganisation.EN_ATTENTE);
             
             // Sauvegarde de l'organisation
             Organisation savedOrganisation = organisationRepository.save(organisation);
@@ -111,7 +115,11 @@ public class OrganisationService implements IOrganisationService {
     
     @Override
     public List<Organisation> getOrganisationsEnAttente() {
-        return organisationRepository.findByStatut(StatutOrganisation.EN_ATTENTE);
+        logger.info("=== Récupération des organisations en attente ===");
+        List<Organisation> organisations = organisationRepository.findByStatut(StatutOrganisation.EN_ATTENTE);
+        logger.info("Nombre d'organisations en attente trouvées : {}", organisations.size());
+        organisations.forEach(org -> logger.info("Organisation en attente : {} (ID: {}, Statut: {})", org.getNom(), org.getId(), org.getStatut()));
+        return organisations;
     }
 
     public List<Organisation> getOrganisationsValidees() {

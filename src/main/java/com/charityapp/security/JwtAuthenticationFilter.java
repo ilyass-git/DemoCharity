@@ -59,9 +59,52 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
         String method = request.getMethod();
-        logger.info("Processing {} request for URI: {}", method, requestURI);
+        logger.info("=== JWT Filter - Début du traitement ===");
+        logger.info("URI: {} {}", method, requestURI);
         
-        // Laisser passer toutes les requêtes sans vérification
+        final String authHeader = request.getHeader("Authorization");
+        logger.info("Auth header: {}", authHeader);
+        
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            logger.info("Pas de token Bearer trouvé, continuation de la chaîne de filtres");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        final String jwt = authHeader.substring(7);
+        logger.info("Token JWT trouvé: {}", jwt);
+        
+        try {
+            final String userEmail = jwtService.extractUsername(jwt);
+            logger.info("Email extrait du token: {}", userEmail);
+            
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                logger.info("Chargement des détails de l'utilisateur pour: {}", userEmail);
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+                logger.info("Détails utilisateur chargés. Rôles: {}", userDetails.getAuthorities());
+                
+                if (jwtService.isTokenValid(jwt, userDetails)) {
+                    logger.info("Token valide pour l'utilisateur: {}", userEmail);
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    logger.info("Authentification définie dans le SecurityContext pour: {}", userEmail);
+                } else {
+                    logger.warn("Token invalide pour l'utilisateur: {}", userEmail);
+                }
+            } else {
+                logger.info("Pas de traitement nécessaire - Email: {}, Authentication existante: {}", 
+                    userEmail, SecurityContextHolder.getContext().getAuthentication() != null);
+            }
+        } catch (Exception e) {
+            logger.error("Erreur lors du traitement du token JWT", e);
+        }
+        
+        logger.info("=== JWT Filter - Fin du traitement ===");
         filterChain.doFilter(request, response);
     }
     

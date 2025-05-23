@@ -80,8 +80,9 @@
 
         .section-title {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 1rem;
             position: relative;
+            color: var(--primary-color);
         }
 
         .section-title:after {
@@ -117,7 +118,8 @@
         }
 
         .card-title {
-            font-weight: bold;
+            color: var(--primary-color);
+            font-weight: 600;
             margin-bottom: 1rem;
         }
 
@@ -127,44 +129,24 @@
             font-weight: 500;
         }
 
-        .badge-primary {
+        .btn-outline-primary {
+            border-radius: 25px;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
             background-color: var(--primary-color);
-        }
-
-        .badge-secondary {
-            background-color: var(--secondary-color);
-        }
-
-        .badge-warning {
-            background-color: var(--accent-color);
-            color: #333;
-        }
-
-        .premium-content {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .premium-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            padding: 1rem;
-            text-align: center;
-        }
-
-        .premium-overlay i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var(--accent-color);
         }
 
         .footer {
@@ -214,6 +196,147 @@
         .fade-in {
             animation: fadeIn 0.5s ease-out;
         }
+
+        .section-container {
+            padding: 1rem 0;
+            margin: 0;
+            overflow-x: unset;
+        }
+
+        .section-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .section-card {
+            width: auto;
+            max-width: 100%;
+            margin-bottom: 0;
+        }
+
+        .card {
+            border-radius: 10px;
+            height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Style de la barre de défilement */
+        .section-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .section-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .section-container::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .section-container::-webkit-scrollbar-thumb:hover {
+            background: #388E3C;
+        }
+
+        /* Indicateur de défilement */
+        .section-container::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 30px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.9));
+            pointer-events: none;
+        }
+
+        /* Responsive breakpoints */
+        @media (max-width: 1200px) {
+            .section-card {
+                flex: 1 1 250px;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-card {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .section-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .pagination-controls button {
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .pagination-controls button:disabled {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .main-section {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            padding: 2.5rem 2rem 2rem 2rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+        .main-section .section-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+        .main-section .section-desc {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .main-section {
+                padding: 1.2rem 0.5rem 1rem 0.5rem;
+            }
+            .main-section .section-title {
+                font-size: 1.3rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -259,26 +382,33 @@
     <!-- Main Content -->
     <div class="container">
         <!-- Actions de charité -->
-        <section id="actions" class="mb-5">
-            <h2 class="section-title">Actions de charité</h2>
-            <div class="row" id="charityActions">
-                <!-- Les actions seront chargées dynamiquement ici -->
+        <section class="main-section mb-5" id="actions">
+            <div class="section-title">Actions de charité</div>
+            <div class="section-desc">Découvrez et soutenez nos actions de charité en cours</div>
+            <div class="section-container">
+                <div class="section-row" id="charityActions">
+                    <!-- Les actions seront chargées dynamiquement ici -->
+                </div>
             </div>
         </section>
 
         <!-- Catégories -->
-        <section id="categories" class="mb-5">
-            <h2 class="section-title">Catégories</h2>
-            <div class="row" id="categories">
-                <!-- Les catégories seront chargées dynamiquement ici -->
+        <section class="main-section mb-5" id="categories-section">
+            <div class="section-title">Catégories</div>
+            <div class="section-desc">Explorez nos différentes catégories d'actions de charité</div>
+            <div class="section-container">
+                <div id="categories"><!-- Les catégories seront chargées dynamiquement ici --></div>
             </div>
         </section>
 
         <!-- Organisations -->
-        <section id="organisations" class="mb-5">
-            <h2 class="section-title">Organisations</h2>
-            <div class="row" id="organisations">
-                <!-- Les organisations seront chargées dynamiquement ici -->
+        <section class="main-section mb-5" id="organisations-section">
+            <div class="section-title">Organisations</div>
+            <div class="section-desc">Découvrez les organisations caritatives partenaires</div>
+            <div class="section-container">
+                <div class="section-row" id="organisations">
+                    <!-- Les organisations seront chargées dynamiquement ici -->
+                </div>
             </div>
         </section>
     </div>
@@ -356,13 +486,16 @@
                         document.getElementById('logoutButton').classList.remove('d-none');
                         
                         // Vérifier si l'utilisateur est un super admin
-                        if (user.roles && user.roles.includes('ROLE_SUPER_ADMIN')) {
+                        console.log('Vérification des rôles de l\'utilisateur:', user);
+                        console.log('Type de user.roles:', typeof user.roles);
+                        console.log('Valeur de user.roles:', user.roles);
+                        if (user.roles && Array.isArray(user.roles) && user.roles.includes('ROLE_SUPER_ADMIN')) {
                             console.log('Utilisateur est ROLE_SUPER_ADMIN, ajout du bouton d\'administration');
                             // Ajouter le bouton d'administration
                             const adminButton = document.createElement('li');
                             adminButton.className = 'nav-item';
                             adminButton.innerHTML = `
-                                <a class="nav-link" href="/admin/validation">
+                                <a class="nav-link" href="#" onclick="navigateToAdmin(event)">
                                     <i class="fas fa-shield-alt me-1"></i>Administration
                                 </a>
                             `;
@@ -395,13 +528,90 @@
             window.location.href = '/login';
         }
 
-        // Fonction pour charger les actions de charité
+        // Pagination pour les actions de charité
+        let actionsData = [];
+        let actionsPage = 1;
+        const actionsPerPage = 3;
+
+        function renderActionsPage() {
+            const actionsContainer = document.getElementById('charityActions');
+            actionsContainer.innerHTML = '';
+            const start = (actionsPage - 1) * actionsPerPage;
+            const end = start + actionsPerPage;
+            const pageData = actionsData.slice(start, end);
+
+            const row = document.createElement('div');
+            row.className = 'section-row';
+            row.id = 'actions-row';
+            pageData.forEach(action => {
+                const card = document.createElement('div');
+                card.className = 'section-card';
+                card.innerHTML = `
+                    <div class="card h-100">
+                        ${action.imageUrl ? `
+                            <img src="${action.imageUrl}" class="card-img-top" alt="${action.titre}">
+                        ` : ''}
+                        <div class="card-body">
+                            <h5 class="card-title">${action.titre}</h5>
+                            <p class="card-text">${action.description}</p>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" 
+                                     style="width: ${(action.montantActuel / action.objectifCollecte * 100)}%">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <span class="badge bg-primary">
+                                    ${Math.round(action.montantActuel / action.objectifCollecte * 100)}% atteint
+                                </span>
+                                <a href="/actions/${action.id}" class="btn btn-outline-primary">Voir détails</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                row.appendChild(card);
+            });
+            actionsContainer.appendChild(row);
+
+            // Pagination controls
+            let controls = document.getElementById('actions-pagination');
+            if (!controls) {
+                controls = document.createElement('div');
+                controls.id = 'actions-pagination';
+                controls.className = 'pagination-controls';
+                actionsContainer.parentNode.appendChild(controls);
+            }
+            controls.innerHTML = '';
+            const totalPages = Math.ceil(actionsData.length / actionsPerPage);
+            const prevBtn = document.createElement('button');
+            prevBtn.innerHTML = '<span aria-label="Précédent">&#8592;</span>';
+            prevBtn.disabled = actionsPage === 1;
+            prevBtn.onclick = () => { actionsPage--; renderActionsPage(); };
+            const nextBtn = document.createElement('button');
+            nextBtn.innerHTML = '<span aria-label="Suivant">&#8594;</span>';
+            nextBtn.disabled = actionsPage === totalPages;
+            nextBtn.onclick = () => { actionsPage++; renderActionsPage(); };
+            controls.appendChild(prevBtn);
+            controls.appendChild(document.createTextNode(`Page ${actionsPage} / ${totalPages}`));
+            controls.appendChild(nextBtn);
+        }
+
         function loadCharityActions() {
             const actionsContainer = document.getElementById('charityActions');
-            actionsContainer.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Chargement...</span></div></div>';
-
-            fetch('/api/actions/public')
+            actionsContainer.innerHTML = '';
+            if (document.getElementById('actions-pagination')) {
+                document.getElementById('actions-pagination').remove();
+            }
+            const token = localStorage.getItem('token');
+            let headers = {};
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+            fetch('/api/actions/public', { headers })
                 .then(response => {
+                    if (response.status === 401) {
+                        actionsContainer.innerHTML = '<div class="alert alert-danger">Vous devez être connecté pour voir les actions de charité. <a href="/login">Se connecter</a></div>';
+                        throw new Error('Non autorisé');
+                    }
                     if (!response.ok) {
                         throw new Error('Erreur lors du chargement des actions');
                     }
@@ -412,42 +622,84 @@
                         actionsContainer.innerHTML = '<div class="alert alert-info">Aucune action de charité disponible pour le moment.</div>';
                         return;
                     }
-
-                    const actionsHtml = actions.map(action => `
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">${action.titre}</h5>
-                                    <p class="card-text">${action.description}</p>
-                                    <div class="progress mb-3">
-                                        <div class="progress-bar" role="progressbar" 
-                                             style="width: ${(action.montantActuel / action.objectifCollecte * 100)}%">
-                                            ${Math.round(action.montantActuel / action.objectifCollecte * 100)}%
-                                        </div>
-                                    </div>
-                                    <p class="card-text">
-                                        <small class="text-muted">
-                                            Objectif: ${action.objectifCollecte}€ | 
-                                            Collecté: ${action.montantActuel}€
-                                        </small>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('');
-                    actionsContainer.innerHTML = actionsHtml;
+                    actionsData = actions;
+                    actionsPage = 1;
+                    renderActionsPage();
                 })
                 .catch(error => {
-                    console.error('Erreur:', error);
-                    actionsContainer.innerHTML = '<div class="alert alert-danger">Erreur lors du chargement des actions de charité.</div>';
+                    if (error.message !== 'Non autorisé') {
+                        console.error('Erreur:', error);
+                        actionsContainer.innerHTML = '<div class="alert alert-danger">Erreur lors du chargement des actions de charité.</div>';
+                    }
                 });
         }
 
-        // Fonction pour charger les catégories
+        // Pagination pour les catégories
+        let categoriesData = [];
+        let categoriesPage = 1;
+        const categoriesPerPage = 3;
+
+        function renderCategoriesPage() {
+            const categoriesContainer = document.getElementById('categories');
+            categoriesContainer.innerHTML = '';
+            const start = (categoriesPage - 1) * categoriesPerPage;
+            const end = start + categoriesPerPage;
+            const pageData = categoriesData.slice(start, end);
+
+            const row = document.createElement('div');
+            row.className = 'section-row';
+            row.id = 'categories-row';
+            pageData.forEach(category => {
+                const card = document.createElement('div');
+                card.className = 'section-card';
+                card.innerHTML = `
+                    <div class="card h-100">
+                        ${category.imageUrl ? `
+                            <img src="${category.imageUrl}" class="card-img-top" alt="${category.nom}">
+                        ` : ''}
+                        <div class="card-body">
+                            <h5 class="card-title">${category.nom}</h5>
+                            <p class="card-text">${category.description}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-primary">${category.nombreActions || 0} actions</span>
+                                <a href="/actions?categorie=${category.id}" class="btn btn-outline-primary">Voir les actions</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                row.appendChild(card);
+            });
+            categoriesContainer.appendChild(row);
+
+            // Pagination controls
+            let controls = document.getElementById('categories-pagination');
+            if (!controls) {
+                controls = document.createElement('div');
+                controls.id = 'categories-pagination';
+                controls.className = 'pagination-controls';
+                categoriesContainer.parentNode.appendChild(controls);
+            }
+            controls.innerHTML = '';
+            const totalPages = Math.ceil(categoriesData.length / categoriesPerPage);
+            const prevBtn = document.createElement('button');
+            prevBtn.innerHTML = '<span aria-label="Précédent">&#8592;</span>';
+            prevBtn.disabled = categoriesPage === 1;
+            prevBtn.onclick = () => { categoriesPage--; renderCategoriesPage(); };
+            const nextBtn = document.createElement('button');
+            nextBtn.innerHTML = '<span aria-label="Suivant">&#8594;</span>';
+            nextBtn.disabled = categoriesPage === totalPages;
+            nextBtn.onclick = () => { categoriesPage++; renderCategoriesPage(); };
+            controls.appendChild(prevBtn);
+            controls.appendChild(document.createTextNode(`Page ${categoriesPage} / ${totalPages}`));
+            controls.appendChild(nextBtn);
+        }
+
         function loadCategories() {
             const categoriesContainer = document.getElementById('categories');
-            categoriesContainer.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Chargement...</span></div></div>';
-
+            categoriesContainer.innerHTML = '';
+            if (document.getElementById('categories-pagination')) {
+                document.getElementById('categories-pagination').remove();
+            }
             fetch('/api/categories')
                 .then(response => {
                     if (!response.ok) {
@@ -460,22 +712,9 @@
                         categoriesContainer.innerHTML = '<div class="alert alert-info">Aucune catégorie disponible pour le moment.</div>';
                         return;
                     }
-
-                    const categoriesHtml = categories.map(category => `
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">${category.nom}</h5>
-                                    <p class="card-text">${category.description}</p>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="badge bg-primary">${category.nombreActions} actions</span>
-                                        <a href="/actions?categorie=${category.id}" class="btn btn-outline-primary">Voir les actions</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('');
-                    categoriesContainer.innerHTML = categoriesHtml;
+                    categoriesData = categories;
+                    categoriesPage = 1;
+                    renderCategoriesPage();
                 })
                 .catch(error => {
                     console.error('Erreur:', error);
@@ -486,7 +725,7 @@
         // Fonction pour charger les organisations
         function loadOrganisations() {
             const organisationsContainer = document.getElementById('organisations');
-            organisationsContainer.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Chargement...</span></div></div>';
+            organisationsContainer.innerHTML = '';
 
             fetch('/api/organisations/validees')
                 .then(response => {
@@ -500,12 +739,16 @@
                         organisationsContainer.innerHTML = '<div class="alert alert-info">Aucune organisation disponible pour le moment.</div>';
                         return;
                     }
-
-                    const organisationsHtml = organisations.map(org => `
-                        <div class="col-md-4 mb-4">
+                    const row = document.createElement('div');
+                    row.className = 'section-row';
+                    row.id = 'organisations-row';
+                    organisations.forEach(org => {
+                        const card = document.createElement('div');
+                        card.className = 'section-card';
+                        card.innerHTML = `
                             <div class="card h-100">
                                 ${org.logoUrl ? `
-                                    <img src="${org.logoUrl}" class="card-img-top" alt="${org.nom}" style="height: 200px; object-fit: cover;">
+                                    <img src="${org.logoUrl}" class="card-img-top" alt="${org.nom}">
                                 ` : ''}
                                 <div class="card-body">
                                     <h5 class="card-title">${org.nom}</h5>
@@ -516,9 +759,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    `).join('');
-                    organisationsContainer.innerHTML = organisationsHtml;
+                        `;
+                        row.appendChild(card);
+                    });
+                    organisationsContainer.appendChild(row);
                 })
                 .catch(error => {
                     console.error('Erreur:', error);
@@ -527,11 +771,87 @@
         }
 
         // Charger les données au chargement de la page
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function() {
             loadCharityActions();
             loadCategories();
             loadOrganisations();
         });
+
+        // Fonction pour naviguer vers la page d'administration
+        function navigateToAdmin(event) {
+            event.preventDefault();
+            console.log('=== Début de la navigation vers l\'administration ===');
+            
+            const token = localStorage.getItem('token');
+            console.log('Token trouvé dans localStorage:', token ? 'Oui' : 'Non');
+            
+            if (!token) {
+                console.error('Aucun token trouvé dans localStorage');
+                window.location.href = '/login';
+                return;
+            }
+
+            console.log('Vérification des droits d\'administration...');
+            // Vérifier d'abord si l'utilisateur a toujours le rôle ROLE_SUPER_ADMIN
+            fetch('/api/utilisateurs/me', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                console.log('Réponse de /api/utilisateurs/me:', response.status);
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la vérification des droits');
+                }
+                return response.json();
+            })
+            .then(user => {
+                console.log('Données utilisateur reçues:', user);
+                console.log('Rôles de l\'utilisateur:', user.roles);
+                
+                if (user.roles && Array.isArray(user.roles) && user.roles.includes('ROLE_SUPER_ADMIN')) {
+                    console.log('Utilisateur a le rôle ROLE_SUPER_ADMIN, chargement de la page d\'administration');
+                    // Au lieu de rediriger, on fait une requête fetch pour charger la page
+                    fetch('/admin/validation', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Accept': 'text/html'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erreur lors du chargement de la page d\'administration');
+                        }
+                        return response.text();
+                    })
+                    .then(html => {
+                        // On remplace le contenu de la page avec le HTML reçu
+                        document.documentElement.innerHTML = html;
+                        // On réexécute les scripts
+                        const scripts = document.getElementsByTagName('script');
+                        for (let script of scripts) {
+                            const newScript = document.createElement('script');
+                            newScript.textContent = script.textContent;
+                            script.parentNode.replaceChild(newScript, script);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement de la page:', error);
+                        alert('Erreur lors du chargement de la page d\'administration');
+                    });
+                } else {
+                    console.error('L\'utilisateur n\'a pas les droits d\'administration');
+                    alert('Vous n\'avez pas les droits d\'administration');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la vérification des droits:', error);
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            });
+        }
     </script>
 </body>
 </html> 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/utilisateurs")
@@ -43,7 +44,7 @@ public class UtilisateurController {
             userInfo.put("email", utilisateur.getEmail());
             userInfo.put("nom", utilisateur.getNom());
             userInfo.put("prenom", utilisateur.getPrenom());
-            userInfo.put("roles", utilisateur.getRoles());
+            userInfo.put("roles", new ArrayList<>(utilisateur.getRoles()));
             
             System.out.println("Réponse JSON: " + userInfo);
             return ResponseEntity.ok(userInfo);

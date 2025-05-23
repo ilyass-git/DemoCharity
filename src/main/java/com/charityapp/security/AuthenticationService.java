@@ -107,12 +107,12 @@ public class AuthenticationService {
             
             // Utiliser l'AuthenticationManager de Spring Security
             try {
-                authenticationManager.authenticate(
+            authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
+                            request.getEmail(),
+                            request.getPassword()
                     )
-                );
+            );
                 logger.info("Authentification réussie via AuthenticationManager");
             } catch (BadCredentialsException e) {
                 logger.error("Échec de l'authentification via AuthenticationManager: {}", e.getMessage());
@@ -123,12 +123,12 @@ public class AuthenticationService {
             logger.info("Rôles de l'utilisateur authentifié: {}", user.getRoles());
             
             // Générer le token JWT
-            var jwtToken = jwtService.generateToken(user);
-            logger.info("Token JWT généré pour l'utilisateur: {}", user.getEmail());
-            
-            return AuthenticationResponse.builder()
-                    .token(jwtToken)
-                    .build();
+        var jwtToken = jwtService.generateToken(user);
+        logger.info("Token JWT généré pour l'utilisateur: {}", user.getEmail());
+        
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
         } catch (BadCredentialsException e) {
             logger.error("Erreur d'authentification pour l'email: {} - {}", request.getEmail(), e.getMessage());
             throw new BadCredentialsException("Email ou mot de passe incorrect");
